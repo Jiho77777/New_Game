@@ -92,3 +92,38 @@
   .template-card small{font-size:9px}
   .field-row{gap:7px}
 }
+
+
+/* Clearer, more polished responsive studio UI */
+:root{--studio-shadow:0 12px 34px rgba(35,31,78,.07)}
+.site-header{box-shadow:0 2px 12px rgba(35,31,78,.035)}
+.brand{font-size:15px}
+.brand-mark{box-shadow:0 5px 12px color-mix(in srgb,var(--accent) 25%,transparent)}
+.intro{padding-top:42px}
+.step-tabs{border:1px solid #e4e3ef;background:#eeedf6;box-shadow:0 5px 18px rgba(35,31,78,.06)}
+.step-tab{transition:background .18s,color .18s,box-shadow .18s}
+.step-tab:focus-visible,.button:focus-visible,.map-tool:focus-visible,.template-card:focus-visible{outline:3px solid color-mix(in srgb,var(--accent) 45%,white);outline-offset:2px}
+.panel{box-shadow:var(--studio-shadow)}
+.panel-heading{padding-bottom:14px;border-bottom:1px solid #f0eff6}
+.field-label{font-size:13px}
+.template-card{transition:border-color .16s,background .16s,transform .16s}
+.template-card:active{transform:scale(.985)}
+.button{min-height:44px}
+.export-panel{box-shadow:0 8px 24px rgba(55,48,120,.05)}
+@media(max-width:760px){
+  .site-header{height:58px;padding:0 13px}
+  .brand{font-size:14px;gap:8px}
+  .brand-mark{width:32px;height:32px}
+  .header-actions .button{min-height:42px}
+  .intro{padding:28px 2px 20px}
+  .intro h1{font-size:clamp(32px,9vw,43px)}
+  .intro-copy{max-width:245px}
+  .step-tabs{top:58px;border-radius:13px;margin-bottom:12px}
+  .step-tab{min-height:50px;font-size:12px}
+  .panel{border-radius:17px;box-shadow:0 8px 25px rgba(35,31,78,.06)}
+  .panel-heading h2{font-size:20px}
+  .field-label{font-size:12px}
+  .template-card{border-radius:12px}
+  .template-icon{width:32px;height:32px}
+  .export-panel{border-radius:16px}
+}
