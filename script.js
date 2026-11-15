@@ -133,7 +133,16 @@ function authMessage(message){ if(authStatus) authStatus.textContent=message; }
 function showAuthSession(user){
   authSignedOut.hidden=!!user;
   authSignedIn.hidden=!user;
-  if(user) $("#authUserEmail").textContent=user.email||"이메일 계정";
+  const headerLoginButton = $("#openLoginPanel");
+  const accountTitle = $("#accountPanel .panel-heading h2");
+  if(user){
+    $("#authUserEmail").textContent=user.displayName ? user.displayName+" ("+(user.email||"")+")" : (user.email||"이메일 계정");
+    if(headerLoginButton) headerLoginButton.textContent="프로필";
+    if(accountTitle) accountTitle.textContent="내 프로필";
+  }else{
+    if(headerLoginButton) headerLoginButton.textContent="로그인";
+    if(accountTitle) accountTitle.textContent="계정 로그인";
+  }
 }
 const firebaseReady = !!(FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.authDomain && FIREBASE_CONFIG.projectId && FIREBASE_CONFIG.appId);
 if(!firebaseReady){
@@ -184,6 +193,8 @@ if(firebaseAuth){
 }
 $("#authSignOut").addEventListener("click",async()=>{
   if(!firebaseAuth){authMessage("Firebase 로그인 서비스가 연결되지 않았어.");return;}
+  const confirmed = window.confirm("로그아웃할까?\n다시 로그인하려면 이메일 또는 Google 계정이 필요해.");
+  if(!confirmed) return;
   try{await firebaseAuth.signOut();authMessage("로그아웃했어.");}
   catch(error){authMessage("로그아웃 오류: "+(error.code||error.message));}
 });
