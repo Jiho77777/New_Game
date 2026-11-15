@@ -186,3 +186,10 @@ function setAiTab(open){
 }
 $("#openAiTab").addEventListener("click",()=>setAiTab(true));
 $("#backFromAi").addEventListener("click",()=>setAiTab(false));
+
+
+// Header login shortcut scrolls to the existing email login panel.
+$("#openLoginPanel").addEventListener("click",()=>{
+  const panel=$("#accountPanel");
+  if(panel){panel.scrollIntoView({behavior:"smooth",block:"start"});}
+});
