@@ -27,7 +27,8 @@
         <input id="authEmail" type="email" autocomplete="email" placeholder="name@example.com">
         <label class="field-label auth-password-label" for="authPassword">비밀번호</label>
         <input id="authPassword" type="password" autocomplete="current-password" minlength="6" placeholder="6자 이상">
-        <div class="auth-actions"><button class="button button-primary" type="button" id="authSignUp">회원가입</button><button class="button button-dark" type="button" id="authSignIn">로그인</button></div>
+        <button class="button button-dark" type="button" id="authGoogle" style="width:100%;margin:12px 0">Google 계정으로 로그인</button>
+        <div class="auth-actions"><button class="button button-primary" type="button" id="authSignUp">회원가입</button><button class="button button-dark" type="button" id="authSignIn">이메일 로그인</button></div>
       </div>
       <div id="authSignedIn" hidden>
         <p class="auth-user-line">로그인 계정: <strong id="authUserEmail"></strong></p>
