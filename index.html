@@ -6,10 +6,11 @@
   <meta name="theme-color" content="#101827">
   <meta name="description" content="코딩 없이 나만의 브라우저 게임을 만드는 쉬운 게임 제작 도구">
   <title>Game Studio - 나만의 게임 만들기</title>
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=7">
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js" defer></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js" defer></script>
-  <script src="script.js?v=6" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js" defer></script>
+  <script src="script.js?v=7" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -99,6 +100,7 @@
             <label class="grow">초당 자동 수익<input id="autoRate" type="number" min="1" max="1000" value="1"></label>
           </div>
           <p class="field-note">구매할 때마다 가격은 자동으로 올라가. 미리보기에서 직접 구매해 볼 수 있어.</p>
+          <div class="custom-upgrades-heading"><strong>추가 업그레이드</strong><button type="button" class="button" id="addUpgrade">＋ 업그레이드 추가</button></div><div id="customUpgradeEditor" class="custom-upgrade-editor"></div>
         </div>
         <div class="field-group" id="platformerSettings" hidden>
           <p class="field-note">빈 캔버스에서 시작해! 도구를 고르고 맵을 눌러 원하는 오브젝트를 직접 배치해.</p>
@@ -124,7 +126,7 @@
             <p class="preview-description" id="previewIntro">제한 시간 안에 반짝이는 별을 많이 모아 봐!</p>
             <div class="game-stats"><div><small>점수</small><b id="previewScore">0</b></div><div><small>남은 시간</small><b id="previewTime">30</b></div></div>
             <div class="play-area" id="playArea"><div class="play-message" id="playMessage">준비됐어?<br>시작 버튼을 눌러 봐!</div><button class="game-target" id="gameTarget" type="button" hidden aria-label="게임 목표">✦</button></div>
-            <div class="clicker-shop" id="clickerShop" hidden><div class="shop-heading">업그레이드 상점</div><div class="shop-buttons"><button type="button" id="buyUpgrade">강화 클릭 · 25 코인</button><button type="button" id="buyAuto">자동 수익 · 50 코인</button></div><p id="clickerStats">클릭 보상: 1 · 자동 수익: 0/초</p></div>
+            <div class="clicker-shop" id="clickerShop" hidden><div class="shop-heading">업그레이드 상점</div><div class="shop-buttons"><button type="button" id="buyUpgrade">강화 클릭 · 25 코인</button><button type="button" id="buyAuto">자동 수익 · 50 코인</button></div><div id="customShopButtons" class="shop-buttons custom-shop-buttons"></div><p id="clickerStats">클릭 보상: 1 · 자동 수익: 0/초</p></div>
             <div class="platformer-area" id="platformerArea" hidden><canvas id="platformerCanvas" width="640" height="300" aria-label="2D 플랫포머"></canvas><div class="touch-controls"><button type="button" data-move="left">◀</button><button type="button" data-move="right">▶</button><button type="button" data-move="jump">점프</button></div><p class="platformer-help">PC: ← → / A D 이동, Space 점프 · 모바일: 아래 버튼</p></div>
             <div class="quiz-area" id="quizArea" hidden><p id="quizPreviewQuestion"></p><input id="quizInput" placeholder="정답을 입력해 봐!" autocomplete="off"><button id="quizSubmit" class="button button-primary" type="button">정답 확인</button></div>
             <button class="button play-button" id="playButton" type="button">게임 시작!</button>
@@ -135,6 +137,8 @@
     </div>
 
 
+
+    <section class="panel saved-games-panel" id="savedGamesPanel"><div class="panel-heading"><div><p class="eyebrow">MY LIBRARY</p><h2>저장된 게임</h2></div><span class="step-pill">로그인 전용</span></div><p class="saved-games-description">로그인한 계정에 내 게임을 저장하고, 언제든 다시 불러올 수 있어.</p><div class="saved-games-actions"><input id="savedGameName" maxlength="32" placeholder="저장할 게임 이름"><button type="button" class="button button-primary" id="saveGameButton">현재 게임 저장</button></div><p class="saved-games-status" id="savedGamesStatus" role="status" aria-live="polite">로그인하면 저장된 게임을 볼 수 있어.</p><div id="savedGamesList" class="saved-games-list"></div></section>
 
     <section class="panel ai-panel" id="aiStudio" hidden>
       <div class="panel-heading"><div><p class="eyebrow">AI GAME BUILDER</p><h2>AI에게 게임 만들기</h2></div><span class="ai-mark">AI</span></div>
