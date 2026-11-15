@@ -35,3 +35,60 @@
 /* Enforce one visible step panel, including on first page load */
 .studio-grid [data-step-panel][hidden]{display:none!important}
 .studio-grid [data-step-panel]:not([hidden]){display:block}
+
+
+/* Mobile-first touch improvements */
+@media(max-width:760px){
+  html{scroll-padding-top:120px;-webkit-text-size-adjust:100%}
+  body{padding-bottom:env(safe-area-inset-bottom)}
+  button,input,select,textarea{-webkit-tap-highlight-color:transparent}
+  button{touch-action:manipulation}
+  .step-tabs{
+    position:sticky;top:60px;z-index:4;
+    margin:0 -3px 13px;padding:6px;
+    border:1px solid #e3e2ef;
+    box-shadow:0 5px 16px #27234b12;
+    backdrop-filter:blur(12px);
+  }
+  .step-tab{min-height:52px;font-size:13px}
+  .step-tab span{width:27px;height:27px;margin-right:5px}
+  .panel{padding:20px 15px}
+  .field-group{margin-bottom:21px}
+  input:not([type=color]),select{
+    height:48px;padding:0 13px;font-size:16px;
+  }
+  .template-card{min-height:102px;padding:12px 10px}
+  .template-card b{font-size:12px}
+  .template-card small{font-size:10px}
+  .map-tools{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+  .map-tool{min-height:46px;font-size:12px;padding:8px 5px}
+  .object-properties{padding:13px;gap:10px}
+  .object-properties label{font-size:11px}
+  .object-properties input[type=number]{height:46px;font-size:16px}
+  .object-properties input[type=color]{height:42px}
+  .button-remove,.button-reset-map{min-height:46px;font-size:12px}
+  .touch-controls{gap:10px;padding:12px 4px 5px}
+  .touch-controls button{
+    flex:1;max-width:110px;min-width:0;min-height:58px;
+    border-radius:15px;font-size:18px;
+  }
+  .touch-controls button[data-move="jump"]{max-width:145px;min-width:0;font-size:16px}
+  .platformer-help{font-size:10px;line-height:1.5}
+  .game-screen{padding:22px 12px;min-height:0}
+  .game-screen h3{font-size:25px}
+  .play-area{height:175px}
+  .game-target{width:58px;height:58px}
+  .play-button,.quiz-area .button{min-height:52px;font-size:15px}
+  .quiz-area input{font-size:16px}
+  .export-panel{margin-top:14px}
+  .button-dark{min-height:50px;font-size:13px}
+}
+@media(max-width:390px){
+  .workspace{width:calc(100% - 20px)}
+  .step-tab{font-size:12px}
+  .step-tab span{margin-right:3px}
+  .panel{padding:17px 12px}
+  .template-card{min-height:98px}
+  .template-card small{font-size:9px}
+  .field-row{gap:7px}
+}
