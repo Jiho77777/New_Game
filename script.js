@@ -173,23 +173,33 @@ $("#authSignOut").addEventListener("click",async()=>{
 });
 
 
-// Dedicated AI tab: opened from the button directly below the export button.
+// AI and login are separate toggle tabs. Clicking the active tab returns to the editor.
 const aiPanel = $("#aiStudio");
-const aiMainViews = [document.querySelector(".intro"), document.querySelector(".step-tabs"), document.querySelector(".studio-grid"), document.querySelector(".export-panel")];
-function setAiTab(open){
-  aiPanel.hidden=!open;
-  aiMainViews.forEach(view=>{if(view)view.hidden=open;});
-  $("#openAiTab").setAttribute("aria-expanded",open?"true":"false");
-  $("#openAiTab").classList.toggle("active",open);
-  if(open){aiPanel.scrollIntoView({behavior:"smooth",block:"start"});}
-  else{document.querySelector(".intro")?.scrollIntoView({behavior:"smooth",block:"start"});}
+const loginPanel = $("#accountPanel");
+const mainViews = [document.querySelector(".intro"), document.querySelector(".step-tabs"), document.querySelector(".studio-grid"), document.querySelector(".export-panel")];
+let activeHeaderTab = null;
+
+function setHeaderTab(tab, scroll=true){
+  const nextTab = activeHeaderTab === tab ? null : tab;
+  activeHeaderTab = nextTab;
+  const showAI = nextTab === "ai";
+  const showLogin = nextTab === "login";
+
+  mainViews.forEach(view=>{if(view)view.hidden=!!nextTab;});
+  aiPanel.hidden = !showAI;
+  loginPanel.hidden = !showLogin;
+
+  $("#openAiTab").setAttribute("aria-expanded",showAI?"true":"false");
+  $("#openAiTab").classList.toggle("active",showAI);
+  $("#openLoginPanel").setAttribute("aria-expanded",showLogin?"true":"false");
+  $("#openLoginPanel").classList.toggle("active",showLogin);
+
+  if(scroll){
+    const target = showAI ? aiPanel : showLogin ? loginPanel : document.querySelector(".intro");
+    target?.scrollIntoView({behavior:"smooth",block:"start"});
+  }
 }
-$("#openAiTab").addEventListener("click",()=>setAiTab(true));
-$("#backFromAi").addEventListener("click",()=>setAiTab(false));
 
-
-// Header login shortcut scrolls to the existing email login panel.
-$("#openLoginPanel").addEventListener("click",()=>{
-  const panel=$("#accountPanel");
-  if(panel){panel.scrollIntoView({behavior:"smooth",block:"start"});}
-});
+$("#openAiTab").addEventListener("click",()=>setHeaderTab("ai"));
+$("#openLoginPanel").addEventListener("click",()=>setHeaderTab("login"));
+$("#backFromAi").addEventListener("click",()=>setHeaderTab(null));
