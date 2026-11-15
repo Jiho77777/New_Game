@@ -6,16 +6,18 @@
   <meta name="theme-color" content="#101827">
   <meta name="description" content="코딩 없이 나만의 브라우저 게임을 만드는 쉬운 게임 제작 도구">
   <title>Game Studio - 나만의 게임 만들기</title>
-  <link rel="stylesheet" href="style.css?v=3">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>\n  <script src="script.js?v=3" defer></script>
+  <link rel="stylesheet" href="style.css?v=4">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="script.js?v=4" defer></script>
 </head>
 <body>
   <header class="site-header">
     <a class="brand" href="#" aria-label="Game Studio 홈"><span class="brand-mark">G</span><span>Game Studio</span></a>
-    <div class="header-actions"><span class="save-status" id="saveStatus">자동 저장 켜짐</span><button class="button button-primary" id="exportTop">게임 내보내기 ↓</button></div>
+    <div class="header-actions"><span class="save-status" id="saveStatus">자동 저장 켜짐</span><div class="header-button-stack"><button class="button button-primary" id="exportTop">게임 내보내기 ↓</button><button class="button ai-tab-button" id="openAiTab" type="button" aria-controls="aiStudio" aria-expanded="false">✦ AI 제작</button></div></div>
   </header>
 
-  <main class="workspace">\n
+  <main class="workspace">
+
     <section class="panel auth-panel" id="accountPanel">
       <div class="panel-heading"><div><p class="eyebrow">MY ACCOUNT</p><h2>계정 로그인</h2></div><span class="step-pill">Firebase 없이</span></div>
       <p class="auth-description">이메일로 가입하거나 로그인해. 비밀번호는 이 사이트에 저장되지 않아.</p>
@@ -114,8 +116,9 @@
 
 
 
-    <section class="panel ai-panel" id="aiStudio">
+    <section class="panel ai-panel" id="aiStudio" hidden>
       <div class="panel-heading"><div><p class="eyebrow">AI GAME BUILDER</p><h2>AI에게 게임 만들기</h2></div><span class="ai-mark">AI</span></div>
+      <button type="button" class="button ai-back-button" id="backFromAi">← 게임 편집기로 돌아가기</button>
       <p class="ai-intro">원하는 게임을 말로 설명하면 AI가 게임을 설계하고 제작하도록 도와주는 공간이야.</p>
       <div class="ai-examples" aria-label="예시 요청">
         <button type="button" class="ai-example" data-prompt="2D 플랫포머 게임을 만들어 줘. 캐릭터가 점프하고 코인을 모으며 장애물을 피하게 해 줘.">2D 플랫포머 만들기</button>
