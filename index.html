@@ -63,13 +63,11 @@
           <p class="field-note">정답은 대소문자와 앞뒤 공백을 무시하고 비교해.</p>
         </div>
         <div class="field-group" id="platformerSettings" hidden>
-          <label class="field-label" for="platformerDifficulty">플랫포머 맵 난이도</label>
-          <select id="platformerDifficulty"><option value="easy">쉬움 · 넓은 발판</option><option value="normal" selected>보통 · 기본 맵</option><option value="hard">어려움 · 좁은 발판</option></select>
-          <p class="field-note">도구를 고르고 맵을 눌러 블록·레이저·코인·가시를 배치해!</p>
+          <p class="field-note">빈 캔버스에서 시작해! 도구를 고르고 맵을 눌러 원하는 오브젝트를 직접 배치해.</p>
           <div class="map-tools"><button type="button" class="map-tool selected" data-tool="select">선택/이동</button><button type="button" class="map-tool" data-tool="block">블록</button><button type="button" class="map-tool" data-tool="laser">레이저</button><button type="button" class="map-tool" data-tool="coin">코인</button><button type="button" class="map-tool" data-tool="spike">가시</button></div>
           <canvas id="mapEditorCanvas" width="640" height="300" aria-label="맵 편집 캔버스"></canvas>
           <div class="object-properties"><strong id="selectedObjectLabel">선택된 오브젝트 없음</strong><div class="field-row"><label class="grow">가로 크기<input id="objectWidth" type="number" min="10" max="600" value="180"></label><label class="grow">세로 크기<input id="objectHeight" type="number" min="8" max="120" value="22"></label></div><label class="field-label" for="objectColor">오브젝트 색상</label><input id="objectColor" type="color" value="#7867f5"><button type="button" class="button button-remove" id="deleteObject" disabled>선택한 오브젝트 삭제</button></div>
-          <button type="button" class="button button-reset-map" id="resetMap">기본 맵으로 되돌리기</button><p class="field-note">선택 모드에서 끌어서 이동할 수 있어. 레이저와 가시에 닿으면 게임 오버!</p>
+          <button type="button" class="button button-reset-map" id="resetMap">캔버스 비우기</button><p class="field-note">블록은 1×1 칸 크기로 설치돼. 선택 모드에서 끌어서 이동하거나 크기를 바꿀 수 있어.</p>
         </div>
         <div class="field-group">
           <label class="field-label" for="buttonText">시작 버튼 글자</label>
