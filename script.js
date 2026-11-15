@@ -1,4 +1,42 @@
 const $ = (s) => document.querySelector(s);
+
+function setStep(step){
+  const selected=String(step)==="2"?"2":"1";
+  document.querySelectorAll("[data-step-tab]").forEach(tab=>{
+    const active=tab.dataset.stepTab===selected;
+    tab.classList.toggle("active",active);
+    tab.setAttribute("aria-selected",active?"true":"false");
+    tab.setAttribute("tabindex",active?"0":"-1");
+  });
+  document.querySelectorAll("[data-step-panel]").forEach(panel=>{
+    const active=panel.dataset.stepPanel===selected;
+    panel.hidden=!active;
+    panel.setAttribute("aria-hidden",active?"false":"true");
+  });
+  const grid=document.querySelector(".studio-grid");
+  if(grid){
+    grid.classList.toggle("step-one",selected==="1");
+    grid.classList.toggle("step-two",selected==="2");
+  }
+  document.documentElement.dataset.activeStep=selected;
+}
+document.addEventListener("click",event=>{
+  const tab=event.target.closest("[data-step-tab]");
+  if(!tab)return;
+  event.preventDefault();
+  setStep(tab.dataset.stepTab);
+});
+document.addEventListener("keydown",event=>{
+  const tab=event.target.closest("[data-step-tab]");
+  if(!tab || !["ArrowLeft","ArrowRight","Home","End"].includes(event.key))return;
+  event.preventDefault();
+  const next=event.key==="Home"?"1":event.key==="End"?"2":
+    event.key==="ArrowRight"?(tab.dataset.stepTab==="1"?"2":"1"):
+    (tab.dataset.stepTab==="2"?"1":"2");
+  setStep(next);
+  document.querySelector('[data-step-tab="'+next+'"]')?.focus();
+});
+setStep("1");
 const defaultLevel=()=>[{type:"block",x:0,y:272,w:360,h:28,color:"#7867f5"},{type:"block",x:420,y:245,w:150,h:20,color:"#7867f5"},{type:"block",x:650,y:215,w:145,h:20,color:"#7867f5"},{type:"block",x:880,y:245,w:150,h:20,color:"#7867f5"},{type:"block",x:1110,y:205,w:150,h:20,color:"#7867f5"},{type:"block",x:1320,y:272,w:240,h:28,color:"#7867f5"},{type:"coin",x:380,y:196,w:18,h:18,color:"#ffc83d"},{type:"coin",x:610,y:176,w:18,h:18,color:"#ffc83d"},{type:"coin",x:840,y:146,w:18,h:18,color:"#ffc83d"},{type:"coin",x:1070,y:176,w:18,h:18,color:"#ffc83d"},{type:"coin",x:1280,y:146,w:18,h:18,color:"#ffc83d"}];
 const state = {levelObjects:defaultLevel(),selectedObject:-1,activeTool:"select",type:"click", title: "별을 모아라!", intro: "제한 시간 안에 반짝이는 별을 많이 모아 봐!", seconds: 30, color: "#7867f5", button: "게임 시작!", question: "대한민국의 수도는 어디일까?", answer: "서울", difficulty: "normal", score: 0, time: 30, running: false, timer: null, waiting: false, startedAt: 0 };
 const controls = { title: $("#gameTitle"), intro: $("#gameIntro"), seconds: $("#gameTime"), color: $("#themeColor"), button: $("#buttonText"), question: $("#quizQuestion"), answer: $("#quizAnswer"), difficulty: $("#platformerDifficulty") };
@@ -50,7 +88,5 @@ const htmlDoc='<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="
 const blob=new Blob([htmlDoc],{type:"text/html;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="my-game.html";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);toast("내 게임 파일을 다운로드했어!");}
 $("#exportTop").addEventListener("click",makeExport);$("#exportBottom").addEventListener("click",makeExport);
 function restoreDraft(){try{const saved=JSON.parse(localStorage.getItem("game-studio-draft")||"null");if(!saved)return;Object.keys(controls).forEach(k=>{if(saved[k]!==undefined){controls[k].value=saved[k];state[k]=saved[k];}});if(saved.difficulty){state.difficulty=saved.difficulty;}if(Array.isArray(saved.levelObjects)){state.levelObjects=saved.levelObjects;}if(saved.type){state.type=saved.type;document.querySelectorAll(".template-card").forEach(b=>b.classList.toggle("selected",b.dataset.type===saved.type));}}catch(e){}}
-function setStep(step){document.querySelectorAll("[data-step-tab]").forEach(tab=>{const active=tab.dataset.stepTab===String(step);tab.classList.toggle("active",active);tab.setAttribute("aria-selected",String(active));});document.querySelectorAll("[data-step-panel]").forEach(panel=>{panel.hidden=panel.dataset.stepPanel!==String(step);});const grid=document.querySelector(".studio-grid");grid.classList.toggle("step-one",String(step)==="1");grid.classList.toggle("step-two",String(step)==="2");}
-document.querySelectorAll("[data-step-tab]").forEach(tab=>tab.addEventListener("click",()=>setStep(tab.dataset.stepTab)));
 setStep("1");
 restoreDraft();updatePreview();chooseObject(-1);
