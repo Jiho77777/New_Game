@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#101827">
   <meta name="description" content="코딩 없이 나만의 브라우저 게임을 만드는 쉬운 게임 제작 도구">
   <title>Game Studio - 나만의 게임 만들기</title>
-  <link rel="stylesheet" href="style.css?v=2">
-  <script src="script.js?v=2" defer></script>
+  <link rel="stylesheet" href="style.css?v=3">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>\n  <script src="script.js?v=3" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -15,7 +15,24 @@
     <div class="header-actions"><span class="save-status" id="saveStatus">자동 저장 켜짐</span><button class="button button-primary" id="exportTop">게임 내보내기 ↓</button></div>
   </header>
 
-  <main class="workspace">
+  <main class="workspace">\n
+    <section class="panel auth-panel" id="accountPanel">
+      <div class="panel-heading"><div><p class="eyebrow">MY ACCOUNT</p><h2>계정 로그인</h2></div><span class="step-pill">Firebase 없이</span></div>
+      <p class="auth-description">이메일로 가입하거나 로그인해. 비밀번호는 이 사이트에 저장되지 않아.</p>
+      <div id="authSignedOut">
+        <label class="field-label" for="authEmail">이메일</label>
+        <input id="authEmail" type="email" autocomplete="email" placeholder="name@example.com">
+        <label class="field-label auth-password-label" for="authPassword">비밀번호</label>
+        <input id="authPassword" type="password" autocomplete="current-password" minlength="6" placeholder="6자 이상">
+        <div class="auth-actions"><button class="button button-primary" type="button" id="authSignUp">회원가입</button><button class="button button-dark" type="button" id="authSignIn">로그인</button></div>
+      </div>
+      <div id="authSignedIn" hidden>
+        <p class="auth-user-line">로그인 계정: <strong id="authUserEmail"></strong></p>
+        <button class="button button-dark" type="button" id="authSignOut">로그아웃</button>
+      </div>
+      <p class="auth-status" id="authStatus" role="status" aria-live="polite">로그인 서비스를 연결하려면 Supabase 프로젝트 설정이 필요해.</p>
+    </section>
+
     <section class="intro">
       <div><p class="eyebrow">NO CODE · JUST CREATE</p><h1>상상한 게임을<br><span>직접 만들어 봐!</span></h1><p class="intro-copy">코딩은 몰라도 괜찮아. 게임 종류를 고르고, 글자와 색을 바꾸면 완성!</p></div>
       <div class="intro-sticker" aria-hidden="true"><span>✦</span><b>MY<br>GAME</b><i>↗</i></div>
