@@ -165,3 +165,23 @@
  .step-tabs{top:76px}
  .ai-panel{margin-top:12px}
 }
+
+
+/* Header actions: export, AI, login in one horizontal row */
+.header-button-row{display:flex;align-items:center;gap:7px;flex-wrap:nowrap}
+.header-button-row .button{min-height:36px;padding:8px 13px;font-size:11px;white-space:nowrap}
+.login-top-button{background:#24263a;color:#fff}
+@media(max-width:760px){
+ .header-actions{gap:6px}
+ .header-button-row{gap:4px}
+ .header-button-row .button{min-height:32px;padding:7px 8px;font-size:10px;border-radius:9px}
+ .brand{gap:6px;font-size:12px}
+ .brand-mark{width:29px;height:29px;flex:none}
+}
+@media(max-width:390px){
+ .site-header{padding-left:9px;padding-right:9px}
+ .header-button-row{gap:3px}
+ .header-button-row .button{padding:7px 6px;font-size:9px}
+ .brand{font-size:11px}
+ .brand-mark{width:26px;height:26px}
+}
