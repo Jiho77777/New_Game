@@ -185,3 +185,7 @@
  .brand{font-size:11px}
  .brand-mark{width:26px;height:26px}
 }
+
+
+/* Click-game shop and progression controls */
+.clicker-shop{margin:14px 0 4px;padding:14px;border:1px solid #e6e4f2;border-radius:14px;background:#faf9ff;text-align:left}.shop-heading{font-weight:800;margin-bottom:9px}.shop-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}.shop-buttons button{min-width:0;padding:11px 8px;border:0;border-radius:10px;background:var(--accent,#7867f5);color:#fff;font-weight:800;font-size:13px;cursor:pointer}.shop-buttons button:disabled{opacity:.45;cursor:not-allowed}.clicker-shop p{font-size:12px;color:#777;margin:9px 0 0}.clicker-settings input{margin-top:6px}.clicker-settings .field-row{gap:10px}@media(max-width:520px){.shop-buttons{grid-template-columns:1fr}.clicker-settings .field-row{flex-direction:column}}
