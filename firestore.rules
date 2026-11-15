@@ -8,7 +8,7 @@ service cloud.firestore {
 
     match /publicGames/{gameId} {
       // 공개 목록은 로그인한 사용자만 읽을 수 있어.
-      allow read: if request.auth != null;
+      allow read: if request.auth != null && resource.data.isPublic == true;
 
       // 새 공개 게임은 본인 계정 소유로만 만들 수 있어.
       allow create:
