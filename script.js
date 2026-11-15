@@ -277,7 +277,7 @@ async function refreshGlobalGames(){
  if(!firebaseDb){status.textContent="Firestore 데이터베이스 설정이 필요해.";return;}
  status.textContent="공개된 게임을 불러오는 중…";
  try{
-  const snap=await firebaseDb.collection("publicGames").orderBy("updatedAt","desc").get();
+  const snap=await firebaseDb.collection("publicGames").where("isPublic","==",true).orderBy("updatedAt","desc").get();
   const docs=snap.docs.filter(doc=>doc.data().isPublic&&doc.data().game);
   if(!docs.length){status.textContent="아직 공개된 게임이 없어. 내 게임을 공개하면 여기에 표시돼!";return;}
   status.textContent=docs.length+"개의 공개 게임을 찾았어.";
