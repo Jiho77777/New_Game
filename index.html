@@ -6,10 +6,10 @@
   <meta name="theme-color" content="#101827">
   <meta name="description" content="코딩 없이 나만의 브라우저 게임을 만드는 쉬운 게임 제작 도구">
   <title>Game Studio - 나만의 게임 만들기</title>
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js" defer></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js" defer></script>
-  <script src="script.js?v=5" defer></script>
+  <script src="script.js?v=6" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -83,6 +83,23 @@
           <input id="quizAnswer" maxlength="40" value="서울">
           <p class="field-note">정답은 대소문자와 앞뒤 공백을 무시하고 비교해.</p>
         </div>
+        <div class="field-group clicker-settings" id="clickerSettings" hidden>
+          <p class="field-label">클릭 게임 성장 시스템</p>
+          <p class="field-note">클릭 보상, 업그레이드 상점, 자동 수익을 직접 설정해 봐!</p>
+          <div class="field-row">
+            <label class="grow">처음 클릭 보상<input id="clickPower" type="number" min="1" max="1000" value="1"></label>
+            <label class="grow">업그레이드 이름<input id="upgradeName" maxlength="18" value="강화 클릭"></label>
+          </div>
+          <div class="field-row">
+            <label class="grow">업그레이드 가격<input id="upgradeCost" type="number" min="1" max="999999" value="25"></label>
+            <label class="grow">클릭 보상 증가량<input id="upgradeGain" type="number" min="1" max="1000" value="1"></label>
+          </div>
+          <div class="field-row">
+            <label class="grow">자동 수익 가격<input id="autoCost" type="number" min="1" max="999999" value="50"></label>
+            <label class="grow">초당 자동 수익<input id="autoRate" type="number" min="1" max="1000" value="1"></label>
+          </div>
+          <p class="field-note">구매할 때마다 가격은 자동으로 올라가. 미리보기에서 직접 구매해 볼 수 있어.</p>
+        </div>
         <div class="field-group" id="platformerSettings" hidden>
           <p class="field-note">빈 캔버스에서 시작해! 도구를 고르고 맵을 눌러 원하는 오브젝트를 직접 배치해.</p>
           <div class="map-tools"><button type="button" class="map-tool selected" data-tool="select">선택/이동</button><button type="button" class="map-tool" data-tool="block">블록</button><button type="button" class="map-tool" data-tool="laser">레이저</button><button type="button" class="map-tool" data-tool="coin">코인</button><button type="button" class="map-tool" data-tool="spike">가시</button></div>
@@ -107,6 +124,7 @@
             <p class="preview-description" id="previewIntro">제한 시간 안에 반짝이는 별을 많이 모아 봐!</p>
             <div class="game-stats"><div><small>점수</small><b id="previewScore">0</b></div><div><small>남은 시간</small><b id="previewTime">30</b></div></div>
             <div class="play-area" id="playArea"><div class="play-message" id="playMessage">준비됐어?<br>시작 버튼을 눌러 봐!</div><button class="game-target" id="gameTarget" type="button" hidden aria-label="게임 목표">✦</button></div>
+            <div class="clicker-shop" id="clickerShop" hidden><div class="shop-heading">업그레이드 상점</div><div class="shop-buttons"><button type="button" id="buyUpgrade">강화 클릭 · 25 코인</button><button type="button" id="buyAuto">자동 수익 · 50 코인</button></div><p id="clickerStats">클릭 보상: 1 · 자동 수익: 0/초</p></div>
             <div class="platformer-area" id="platformerArea" hidden><canvas id="platformerCanvas" width="640" height="300" aria-label="2D 플랫포머"></canvas><div class="touch-controls"><button type="button" data-move="left">◀</button><button type="button" data-move="right">▶</button><button type="button" data-move="jump">점프</button></div><p class="platformer-help">PC: ← → / A D 이동, Space 점프 · 모바일: 아래 버튼</p></div>
             <div class="quiz-area" id="quizArea" hidden><p id="quizPreviewQuestion"></p><input id="quizInput" placeholder="정답을 입력해 봐!" autocomplete="off"><button id="quizSubmit" class="button button-primary" type="button">정답 확인</button></div>
             <button class="button play-button" id="playButton" type="button">게임 시작!</button>
