@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <title>New_Game</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="game-shell">
+    <header class="topbar">
+      <p class="eyebrow">YOUR NEXT ADVENTURE</p>
+      <h1>New_Game</h1>
+      <p class="subtitle">Tap the target. Beat your best score.</p>
+    </header>
+
+    <section class="scoreboard" aria-label="Game score">
+      <div><span class="score-label">SCORE</span><strong id="score">0</strong></div>
+      <div><span class="score-label">TIME</span><strong id="time">30</strong></div>
+      <div><span class="score-label">BEST</span><strong id="best">0</strong></div>
+    </section>
+
+    <section class="arena" id="arena" aria-label="Game area">
+      <p class="arena-hint" id="message">Press Start to play!</p>
+      <button class="target" id="target" type="button" aria-label="Target" hidden></button>
+    </section>
+
+    <button class="start-button" id="start" type="button">START GAME</button>
+    <p class="help-text">You have 30 seconds. Tap the glowing target as many times as you can!</p>
+  </main>
+</body>
+</html>
