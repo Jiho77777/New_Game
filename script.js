@@ -155,6 +155,8 @@ const authStatus = $("#authStatus");
 const authSignedOut = $("#authSignedOut");
 const authSignedIn = $("#authSignedIn");
 let firebaseAuth = null;
+let firebaseDb = null;
+let currentAuthUser = null;
 function authMessage(message){ if(authStatus) authStatus.textContent=message; }
 function showAuthSession(user){
   authSignedOut.hidden=!!user;
@@ -173,14 +175,17 @@ function showAuthSession(user){
 const firebaseReady = !!(FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.authDomain && FIREBASE_CONFIG.projectId && FIREBASE_CONFIG.appId);
 if(!firebaseReady){
   authMessage("Firebase 설정이 아직 없어. Firebase 웹 앱의 설정값을 연결하면 이메일 회원가입과 로그인을 사용할 수 있어.");
-}else if(!window.firebase?.initializeApp || !window.firebase?.auth){
+}else if(!window.firebase?.initializeApp || !window.firebase?.auth || !window.firebase?.firestore){
   authMessage("Firebase 로그인 라이브러리를 불러오지 못했어. 인터넷 연결을 확인해 줘.");
 }else{
   try{
     const app = window.firebase.apps.length ? window.firebase.app() : window.firebase.initializeApp(FIREBASE_CONFIG);
     firebaseAuth = app.auth();
+    firebaseDb = app.firestore();
     firebaseAuth.onAuthStateChanged(user=>{
+      currentAuthUser=user||null;
       showAuthSession(user);
+      refreshSavedGames();
       authMessage(user ? "로그인했어! "+(user.email||"") : "이메일로 회원가입하거나 로그인해 줘.");
       // 로그인 성공 직후에는 로그인 화면을 닫고, 상단 프로필 버튼으로 들어오게 해.
       if(user && typeof activeHeaderTab !== "undefined" && activeHeaderTab === "login"){
@@ -221,6 +226,32 @@ if(firebaseAuth){
     if(result && result.user) authMessage("Google 로그인이 완료됐어!");
   }).catch(error=>authMessage("Google 로그인 오류: "+(error.code||error.message)));
 }
+async function refreshSavedGames(){
+ const status=$("#savedGamesStatus"),list=$("#savedGamesList");if(!status||!list)return;list.innerHTML="";
+ if(!currentAuthUser){status.textContent="게임 저장과 목록은 로그인한 사용자만 이용할 수 있어.";return;}
+ if(!firebaseDb){status.textContent="Firestore 데이터베이스 설정이 필요해.";return;}
+ status.textContent="저장된 게임을 불러오는 중…";
+ try{const snap=await firebaseDb.collection("users").doc(currentAuthUser.uid).collection("games").orderBy("updatedAt","desc").get();
+ if(snap.empty){status.textContent="아직 저장된 게임이 없어. 위에서 첫 게임을 저장해 봐!";return;}
+ status.textContent=snap.size+"개의 게임이 저장되어 있어.";snap.forEach(doc=>{const data=doc.data(),card=document.createElement("div");card.className="saved-game-card";
+ const title=document.createElement("strong");title.textContent=data.name||data.game?.title||"이름 없는 게임";
+ const meta=document.createElement("span");meta.textContent=(data.game?.type||"게임")+" · "+(data.updatedAt?.toDate?data.updatedAt.toDate().toLocaleDateString():"저장됨");
+ const load=document.createElement("button");load.className="button button-primary";load.textContent="불러오기";load.onclick=()=>loadSavedGame(data.game);
+ const del=document.createElement("button");del.className="button button-remove";del.textContent="삭제";del.onclick=async()=>{if(!confirm("이 저장된 게임을 삭제할까?"))return;try{await firebaseDb.collection("users").doc(currentAuthUser.uid).collection("games").doc(doc.id).delete();refreshSavedGames();}catch(e){status.textContent="삭제 실패: "+e.message;}};
+ card.append(title,meta,load,del);list.appendChild(card);});
+ }catch(e){status.textContent="저장 목록을 불러오지 못했어. Firestore 설정과 보안 규칙을 확인해 줘.";console.error(e);}
+}
+function snapshotGame(){return {type:state.type,title:state.title,intro:state.intro,seconds:state.seconds,color:state.color,button:state.button,question:state.question,answer:state.answer,levelObjects:state.levelObjects,clickPower:state.clickPower,upgradeName:state.upgradeName,upgradeCost:state.upgradeCost,upgradeGain:state.upgradeGain,autoCost:state.autoCost,autoRate:state.autoRate,customUpgrades:state.customUpgrades||[]};}
+function loadSavedGame(game){if(!game)return;Object.keys(game).forEach(k=>{if(k in state)state[k]=game[k];});Object.keys(controls).forEach(k=>{if(game[k]!==undefined)controls[k].value=game[k];});["clickPower","upgradeName","upgradeCost","upgradeGain","autoCost","autoRate"].forEach(k=>{const el=$("#"+k);if(el&&game[k]!==undefined)el.value=game[k];});document.querySelectorAll(".template-card").forEach(b=>b.classList.toggle("selected",b.dataset.type===state.type));renderCustomUpgradeEditor();updatePreview();chooseObject(-1);setStep("1");toast("저장된 게임을 불러왔어!");}
+$("#saveGameButton").addEventListener("click",async()=>{
+ const status=$("#savedGamesStatus");
+ if(!currentAuthUser){status.textContent="저장하려면 먼저 로그인해 줘.";setHeaderTab("login");return;}
+ if(!firebaseDb){status.textContent="Firestore 데이터베이스가 연결되지 않았어.";return;}
+ const name=$("#savedGameName").value.trim()||state.title||"나의 게임";status.textContent="게임을 저장하는 중…";
+ try{await firebaseDb.collection("users").doc(currentAuthUser.uid).collection("games").add({name:name.slice(0,32),game:snapshotGame(),updatedAt:window.firebase.firestore.FieldValue.serverTimestamp()});status.textContent="게임을 저장했어!";refreshSavedGames();}
+ catch(e){status.textContent="저장 실패: Firestore를 활성화하고 보안 규칙을 설정해 줘.";console.error(e);}
+});
+
 $("#authSignOut").addEventListener("click",async()=>{
   if(!firebaseAuth){authMessage("Firebase 로그인 서비스가 연결되지 않았어.");return;}
   const confirmed = window.confirm("로그아웃할까?\n다시 로그인하려면 이메일 또는 Google 계정이 필요해.");
