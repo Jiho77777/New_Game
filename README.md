@@ -1,19 +1,23 @@
-# New_Game
+# Game Studio — New_Game
 
-My new game — a small, mobile-friendly browser game starter.
+코딩을 몰라도 템플릿을 고르고 글자와 색상을 바꿔 나만의 간단한 브라우저 게임을 만들 수 있는 노코드 게임 제작 도구입니다.
 
-## Play locally
-Open `index.html` in a browser.
+## 포함된 기능
+- 클릭 게임, 퀴즈 게임, 반응속도 게임 템플릿
+- 게임 제목, 설명, 제한 시간, 색상, 시작 버튼 수정
+- 실시간 미리보기와 직접 플레이
+- 설정 자동 저장(현재 브라우저)
+- 완성한 게임을 독립 실행 HTML 파일로 다운로드
+- 모바일/태블릿/PC 반응형 화면
 
-## Files
-- `index.html` — game structure
-- `style.css` — responsive styling
-- `script.js` — game logic
+## 실행
+`index.html`을 브라우저에서 열면 됩니다.
 
-## GitHub Pages
-To publish the game:
-1. Open the repository's **Settings**.
-2. Select **Pages**.
-3. Under **Build and deployment**, choose **Deploy from a branch**.
-4. Select **main** and **/(root)**, then save.
-5. Wait for GitHub Pages to publish the site.
+## GitHub Pages 배포
+1. 저장소의 **Settings**로 이동합니다.
+2. **Pages**를 엽니다.
+3. **Deploy from a branch**를 선택합니다.
+4. Branch는 `main`, 폴더는 `/(root)`로 설정하고 저장합니다.
+5. 배포가 완료되면 Pages 주소에서 Game Studio를 사용할 수 있습니다.
+
+> 현재 버전은 템플릿 기반의 간단한 제작 도구입니다. 드래그 앤 드롭 맵 편집기, 캐릭터/장애물 배치, 프로젝트 클라우드 저장 기능은 아직 포함되어 있지 않습니다.
