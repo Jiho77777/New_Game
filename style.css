@@ -147,3 +147,21 @@
 .auth-user-line{font-size:13px;color:#62647a;overflow-wrap:anywhere}
 .auth-status{margin:13px 0 0;padding:10px 12px;border-radius:10px;background:#f6f5ff;color:#6e6b91;font-size:11px;line-height:1.55}
 @media(max-width:760px){.auth-actions{flex-direction:column}.auth-actions .button{width:100%;min-height:48px}.auth-panel{margin-bottom:14px}}
+
+
+/* Dedicated AI tab button below export */
+.header-actions{display:flex;align-items:center;gap:12px}
+.header-button-stack{display:flex;flex-direction:column;align-items:stretch;gap:5px}
+.header-button-stack .button{min-height:34px;padding:8px 12px;font-size:11px;white-space:nowrap}
+.ai-tab-button{background:#f0edff;color:#5e50c7;border:1px solid #ddd7ff}
+.ai-tab-button.active{background:#5e50c7;color:#fff}
+.ai-panel{max-width:850px;margin:16px auto 20px;scroll-margin-top:85px}
+.ai-back-button{margin:-8px 0 18px;background:#f2f1f8;color:#4f5067;font-size:11px;padding:10px 13px}
+@media(max-width:760px){
+ .site-header{height:76px}
+ .header-actions{gap:7px}
+ .header-button-stack{gap:4px}
+ .header-button-stack .button{min-height:30px;padding:6px 9px;font-size:10px}
+ .step-tabs{top:76px}
+ .ai-panel{margin-top:12px}
+}
