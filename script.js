@@ -156,6 +156,10 @@ if(!firebaseReady){
     firebaseAuth.onAuthStateChanged(user=>{
       showAuthSession(user);
       authMessage(user ? "로그인했어! "+(user.email||"") : "이메일로 회원가입하거나 로그인해 줘.");
+      // 로그인 성공 직후에는 로그인 화면을 닫고, 상단 프로필 버튼으로 들어오게 해.
+      if(user && typeof activeHeaderTab !== "undefined" && activeHeaderTab === "login"){
+        setHeaderTab(null,false);
+      }
     },error=>authMessage("로그인 상태 확인 오류: "+error.message));
   }catch(error){authMessage("Firebase 설정을 확인해 줘: "+error.message);}
 }
