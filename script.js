@@ -171,3 +171,18 @@ $("#authSignOut").addEventListener("click",async()=>{
   const {error}=await supabaseClient.auth.signOut();
   authMessage(error?"로그아웃 오류: "+error.message:"로그아웃했어.");
 });
+
+
+// Dedicated AI tab: opened from the button directly below the export button.
+const aiPanel = $("#aiStudio");
+const aiMainViews = [document.querySelector(".intro"), document.querySelector(".step-tabs"), document.querySelector(".studio-grid"), document.querySelector(".export-panel")];
+function setAiTab(open){
+  aiPanel.hidden=!open;
+  aiMainViews.forEach(view=>{if(view)view.hidden=open;});
+  $("#openAiTab").setAttribute("aria-expanded",open?"true":"false");
+  $("#openAiTab").classList.toggle("active",open);
+  if(open){aiPanel.scrollIntoView({behavior:"smooth",block:"start"});}
+  else{document.querySelector(".intro")?.scrollIntoView({behavior:"smooth",block:"start"});}
+}
+$("#openAiTab").addEventListener("click",()=>setAiTab(true));
+$("#backFromAi").addEventListener("click",()=>setAiTab(false));
