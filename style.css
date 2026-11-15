@@ -127,3 +127,7 @@
   .template-icon{width:32px;height:32px}
   .export-panel{border-radius:16px}
 }
+
+
+/* Blank platformer canvas and clear 1x1 grid cells */
+#mapEditorCanvas{background:#f8f9fd}
