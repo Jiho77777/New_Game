@@ -90,3 +90,29 @@ $("#exportTop").addEventListener("click",makeExport);$("#exportBottom").addEvent
 function restoreDraft(){try{const saved=JSON.parse(localStorage.getItem("game-studio-draft-v2")||"null");if(!saved)return;Object.keys(controls).forEach(k=>{if(saved[k]!==undefined){controls[k].value=saved[k];state[k]=saved[k];}});if(Array.isArray(saved.levelObjects)){state.levelObjects=saved.levelObjects;}if(saved.type){state.type=saved.type;document.querySelectorAll(".template-card").forEach(b=>b.classList.toggle("selected",b.dataset.type===saved.type));}}catch(e){}}
 setStep("1");
 restoreDraft();updatePreview();chooseObject(-1);
+
+
+// AI builder integration point. The endpoint must be a secure server; never place an AI secret key in this file.
+const AI_ENDPOINT = window.GAME_STUDIO_AI_ENDPOINT || "";
+const aiPromptEl = $("#aiPrompt");
+const aiStatusEl = $("#aiStatus");
+document.querySelectorAll("[data-prompt]").forEach(button=>button.addEventListener("click",()=>{aiPromptEl.value=button.dataset.prompt;aiPromptEl.focus();}));
+$("#aiBuildButton").addEventListener("click",async()=>{
+  const prompt=aiPromptEl.value.trim();
+  if(!prompt){toast("먼저 만들고 싶은 게임을 설명해 줘!");aiPromptEl.focus();return;}
+  if(!AI_ENDPOINT){aiStatusEl.textContent="아직 AI 서버가 연결되지 않았어. 화면은 준비됐고, 안전한 AI 서버를 연결하면 실제 제작이 가능해.";toast("AI 서버 연결이 아직 필요해!");return;}
+  const button=$("#aiBuildButton");button.disabled=true;button.textContent="AI가 게임을 설계하는 중…";aiStatusEl.textContent="요청을 보내고 있어…";
+  try{
+    const response=await fetch(AI_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt, currentGame:{type:state.type,title:state.title,intro:state.intro,seconds:state.seconds,color:state.color,levelObjects:state.levelObjects}})});
+    if(!response.ok)throw new Error("AI 서버 응답 오류 ("+response.status+")");
+    const result=await response.json();
+    if(result.title){state.title=String(result.title).slice(0,28);controls.title.value=state.title;}
+    if(result.intro){state.intro=String(result.intro).slice(0,70);controls.intro.value=state.intro;}
+    if(["click","quiz","reaction","platformer"].includes(result.type)){state.type=result.type;document.querySelectorAll(".template-card").forEach(b=>b.classList.toggle("selected",b.dataset.type===state.type));}
+    if(Array.isArray(result.levelObjects))state.levelObjects=result.levelObjects.slice(0,150);
+    if(result.color&&/^#[0-9a-f]{6}$/i.test(result.color)){state.color=result.color;controls.color.value=state.color;}
+    if(result.seconds){state.seconds=Math.max(10,Math.min(120,Number(result.seconds)||30));controls.seconds.value=String(state.seconds);}
+    updatePreview();chooseObject(-1);aiStatusEl.textContent=result.message||"게임 초안이 만들어졌어! 미리보기 탭에서 확인해 봐.";setStep("1");toast("AI 게임 초안을 적용했어!");
+  }catch(error){aiStatusEl.textContent="AI 제작에 실패했어. 서버 설정을 확인하고 다시 시도해 줘.";toast(error.message||"AI 연결 오류");}
+  finally{button.disabled=false;button.innerHTML="<span>✦</span> AI로 만들기";}
+});
