@@ -31,3 +31,7 @@
 .step-tab.active span{background:var(--accent);color:#fff}
 .studio-grid.step-one,.studio-grid.step-two{grid-template-columns:minmax(0,1fr)}
 @media(min-width:761px){.studio-grid.step-one>.editor-panel,.studio-grid.step-two>.preview-panel{width:100%;max-width:850px;margin:0 auto}}
+
+/* Enforce one visible step panel, including on first page load */
+.studio-grid [data-step-panel][hidden]{display:none!important}
+.studio-grid [data-step-panel]:not([hidden]){display:block}
