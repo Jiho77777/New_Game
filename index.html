@@ -31,6 +31,7 @@
             <button class="template-card selected" data-type="click" type="button"><span class="template-icon">◉</span><b>클릭 게임</b><small>빠르게 눌러 점수 얻기</small></button>
             <button class="template-card" data-type="quiz" type="button"><span class="template-icon">?</span><b>퀴즈 게임</b><small>정답을 맞혀 보상 받기</small></button>
             <button class="template-card" data-type="reaction" type="button"><span class="template-icon">⚡</span><b>반응속도</b><small>신호가 오면 재빨리 누르기</small></button>
+            <button class="template-card" data-type="platformer" type="button"><span class="template-icon">▰</span><b>2D 플랫포머</b><small>달리고 점프해서 코인 모으기</small></button>
           </div>
         </div>
 
@@ -60,6 +61,11 @@
           <input id="quizAnswer" maxlength="40" value="서울">
           <p class="field-note">정답은 대소문자와 앞뒤 공백을 무시하고 비교해.</p>
         </div>
+        <div class="field-group" id="platformerSettings" hidden>
+          <label class="field-label" for="platformerDifficulty">플랫포머 맵 난이도</label>
+          <select id="platformerDifficulty"><option value="easy">쉬움 · 넓은 발판</option><option value="normal" selected>보통 · 기본 맵</option><option value="hard">어려움 · 좁은 발판</option></select>
+          <p class="field-note">발판을 건너 코인을 모으고 깃발에 도착해!</p>
+        </div>
         <div class="field-group">
           <label class="field-label" for="buttonText">시작 버튼 글자</label>
           <input id="buttonText" maxlength="18" value="게임 시작!">
@@ -77,6 +83,7 @@
             <p class="preview-description" id="previewIntro">제한 시간 안에 반짝이는 별을 많이 모아 봐!</p>
             <div class="game-stats"><div><small>점수</small><b id="previewScore">0</b></div><div><small>남은 시간</small><b id="previewTime">30</b></div></div>
             <div class="play-area" id="playArea"><div class="play-message" id="playMessage">준비됐어?<br>시작 버튼을 눌러 봐!</div><button class="game-target" id="gameTarget" type="button" hidden aria-label="게임 목표">✦</button></div>
+            <div class="platformer-area" id="platformerArea" hidden><canvas id="platformerCanvas" width="640" height="300" aria-label="2D 플랫포머"></canvas><div class="touch-controls"><button type="button" data-move="left">◀</button><button type="button" data-move="right">▶</button><button type="button" data-move="jump">점프</button></div><p class="platformer-help">PC: ← → / A D 이동, Space 점프 · 모바일: 아래 버튼</p></div>
             <div class="quiz-area" id="quizArea" hidden><p id="quizPreviewQuestion"></p><input id="quizInput" placeholder="정답을 입력해 봐!" autocomplete="off"><button id="quizSubmit" class="button button-primary" type="button">정답 확인</button></div>
             <button class="button play-button" id="playButton" type="button">게임 시작!</button>
           </div>
