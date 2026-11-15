@@ -116,3 +116,58 @@ $("#aiBuildButton").addEventListener("click",async()=>{
   }catch(error){aiStatusEl.textContent="AI 제작에 실패했어. 서버 설정을 확인하고 다시 시도해 줘.";toast(error.message||"AI 연결 오류");}
   finally{button.disabled=false;button.innerHTML="<span>✦</span> AI로 만들기";}
 });
+
+
+// Supabase email/password authentication (no Firebase). Configure the project URL and publishable anon key below.
+// The publishable anon key is designed for browser use; protect data with Supabase RLS policies.
+const SUPABASE_URL = window.GAME_STUDIO_SUPABASE_URL || "";
+const SUPABASE_ANON_KEY = window.GAME_STUDIO_SUPABASE_ANON_KEY || "";
+const authStatus = $("#authStatus");
+const authSignedOut = $("#authSignedOut");
+const authSignedIn = $("#authSignedIn");
+let supabaseClient = null;
+function authMessage(message){ if(authStatus) authStatus.textContent=message; }
+function showAuthSession(session){
+  const user=session?.user;
+  authSignedOut.hidden=!!user;
+  authSignedIn.hidden=!user;
+  if(user) $("#authUserEmail").textContent=user.email||"이메일 계정";
+}
+if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
+  authMessage("Supabase 연결 설정이 아직 없어. 프로젝트 URL과 공개용 키를 설정하면 이메일 회원가입과 로그인을 사용할 수 있어.");
+}else if(!window.supabase?.createClient){
+  authMessage("로그인 라이브러리를 불러오지 못했어. 인터넷 연결을 확인해 줘.");
+}else{
+  try{
+    supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+    supabaseClient.auth.getSession().then(({data,error})=>{
+      if(error) authMessage("로그인 상태를 확인하지 못했어: "+error.message);
+      else {showAuthSession(data.session);authMessage(data.session?"로그인되어 있어.":"이메일로 회원가입하거나 로그인해 줘.");}
+    });
+    supabaseClient.auth.onAuthStateChange((_event,session)=>{
+      showAuthSession(session);
+      if(session) authMessage("로그인했어! "+(session.user.email||""));
+    });
+  }catch(error){authMessage("로그인 설정을 확인해 줘: "+error.message);}
+}
+$("#authSignUp").addEventListener("click",async()=>{
+  if(!supabaseClient){authMessage("먼저 Supabase 프로젝트 설정이 필요해.");return;}
+  const email=$("#authEmail").value.trim(),password=$("#authPassword").value;
+  if(!email||password.length<6){authMessage("이메일과 6자 이상의 비밀번호를 입력해 줘.");return;}
+  const {data,error}=await supabaseClient.auth.signUp({email,password});
+  if(error) authMessage("회원가입 오류: "+error.message);
+  else if(data.session) authMessage("회원가입과 로그인이 완료됐어!");
+  else authMessage("가입 요청 완료! 이메일 인증 링크를 확인해 줘.");
+});
+$("#authSignIn").addEventListener("click",async()=>{
+  if(!supabaseClient){authMessage("먼저 Supabase 프로젝트 설정이 필요해.");return;}
+  const email=$("#authEmail").value.trim(),password=$("#authPassword").value;
+  if(!email||!password){authMessage("이메일과 비밀번호를 입력해 줘.");return;}
+  const {error}=await supabaseClient.auth.signInWithPassword({email,password});
+  authMessage(error?"로그인 오류: "+error.message:"로그인했어!");
+});
+$("#authSignOut").addEventListener("click",async()=>{
+  if(!supabaseClient){authMessage("로그인 서비스가 연결되지 않았어.");return;}
+  const {error}=await supabaseClient.auth.signOut();
+  authMessage(error?"로그아웃 오류: "+error.message:"로그아웃했어.");
+});
