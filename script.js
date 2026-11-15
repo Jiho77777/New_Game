@@ -120,10 +120,10 @@ $("#aiBuildButton").addEventListener("click",async()=>{
 
 // Firebase email/password authentication. Paste your Firebase Web App config below.
 const FIREBASE_CONFIG = window.GAME_STUDIO_FIREBASE_CONFIG || {
-  apiKey: "",
-  authDomain: "",
-  projectId: "",
-  appId: ""
+  apiKey: "AIzaSyBYlHR-_bq4qS_G_rixNGQJTedad7R5JYg",
+  authDomain: "game-studio-94426.firebaseapp.com",
+  projectId: "game-studio-94426",
+  appId: "1:510363209588:web:1779ae11241d8a86632621"
 };
 const authStatus = $("#authStatus");
 const authSignedOut = $("#authSignedOut");
@@ -168,6 +168,20 @@ $("#authSignIn").addEventListener("click",async()=>{
     authMessage("로그인했어!");
   }catch(error){authMessage("로그인 오류: "+(error.code||error.message));}
 });
+$("#authGoogle").addEventListener("click",async()=>{
+  if(!firebaseAuth){authMessage("먼저 Firebase 웹 앱 설정을 연결해야 해.");return;}
+  try{
+    const provider = new window.firebase.auth.GoogleAuthProvider();
+    provider.setCustomParameters({prompt:"select_account"});
+    authMessage("Google 계정 선택 화면으로 이동할게...");
+    await firebaseAuth.signInWithRedirect(provider);
+  }catch(error){authMessage("Google 로그인 오류: "+(error.code||error.message));}
+});
+if(firebaseAuth){
+  firebaseAuth.getRedirectResult().then(result=>{
+    if(result && result.user) authMessage("Google 로그인이 완료됐어!");
+  }).catch(error=>authMessage("Google 로그인 오류: "+(error.code||error.message)));
+}
 $("#authSignOut").addEventListener("click",async()=>{
   if(!firebaseAuth){authMessage("Firebase 로그인 서비스가 연결되지 않았어.");return;}
   try{await firebaseAuth.signOut();authMessage("로그아웃했어.");}
