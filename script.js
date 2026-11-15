@@ -118,58 +118,60 @@ $("#aiBuildButton").addEventListener("click",async()=>{
 });
 
 
-// Supabase email/password authentication (no Firebase). Configure the project URL and publishable anon key below.
-// The publishable anon key is designed for browser use; protect data with Supabase RLS policies.
-const SUPABASE_URL = window.GAME_STUDIO_SUPABASE_URL || "";
-const SUPABASE_ANON_KEY = window.GAME_STUDIO_SUPABASE_ANON_KEY || "";
+// Firebase email/password authentication. Paste your Firebase Web App config below.
+const FIREBASE_CONFIG = window.GAME_STUDIO_FIREBASE_CONFIG || {
+  apiKey: "",
+  authDomain: "",
+  projectId: "",
+  appId: ""
+};
 const authStatus = $("#authStatus");
 const authSignedOut = $("#authSignedOut");
 const authSignedIn = $("#authSignedIn");
-let supabaseClient = null;
+let firebaseAuth = null;
 function authMessage(message){ if(authStatus) authStatus.textContent=message; }
-function showAuthSession(session){
-  const user=session?.user;
+function showAuthSession(user){
   authSignedOut.hidden=!!user;
   authSignedIn.hidden=!user;
   if(user) $("#authUserEmail").textContent=user.email||"이메일 계정";
 }
-if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
-  authMessage("Supabase 연결 설정이 아직 없어. 프로젝트 URL과 공개용 키를 설정하면 이메일 회원가입과 로그인을 사용할 수 있어.");
-}else if(!window.supabase?.createClient){
-  authMessage("로그인 라이브러리를 불러오지 못했어. 인터넷 연결을 확인해 줘.");
+const firebaseReady = !!(FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.authDomain && FIREBASE_CONFIG.projectId && FIREBASE_CONFIG.appId);
+if(!firebaseReady){
+  authMessage("Firebase 설정이 아직 없어. Firebase 웹 앱의 설정값을 연결하면 이메일 회원가입과 로그인을 사용할 수 있어.");
+}else if(!window.firebase?.initializeApp || !window.firebase?.auth){
+  authMessage("Firebase 로그인 라이브러리를 불러오지 못했어. 인터넷 연결을 확인해 줘.");
 }else{
   try{
-    supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-    supabaseClient.auth.getSession().then(({data,error})=>{
-      if(error) authMessage("로그인 상태를 확인하지 못했어: "+error.message);
-      else {showAuthSession(data.session);authMessage(data.session?"로그인되어 있어.":"이메일로 회원가입하거나 로그인해 줘.");}
-    });
-    supabaseClient.auth.onAuthStateChange((_event,session)=>{
-      showAuthSession(session);
-      if(session) authMessage("로그인했어! "+(session.user.email||""));
-    });
-  }catch(error){authMessage("로그인 설정을 확인해 줘: "+error.message);}
+    const app = window.firebase.apps.length ? window.firebase.app() : window.firebase.initializeApp(FIREBASE_CONFIG);
+    firebaseAuth = app.auth();
+    firebaseAuth.onAuthStateChanged(user=>{
+      showAuthSession(user);
+      authMessage(user ? "로그인했어! "+(user.email||"") : "이메일로 회원가입하거나 로그인해 줘.");
+    },error=>authMessage("로그인 상태 확인 오류: "+error.message));
+  }catch(error){authMessage("Firebase 설정을 확인해 줘: "+error.message);}
 }
 $("#authSignUp").addEventListener("click",async()=>{
-  if(!supabaseClient){authMessage("먼저 Supabase 프로젝트 설정이 필요해.");return;}
+  if(!firebaseAuth){authMessage("먼저 Firebase 웹 앱 설정을 연결해야 해.");return;}
   const email=$("#authEmail").value.trim(),password=$("#authPassword").value;
   if(!email||password.length<6){authMessage("이메일과 6자 이상의 비밀번호를 입력해 줘.");return;}
-  const {data,error}=await supabaseClient.auth.signUp({email,password});
-  if(error) authMessage("회원가입 오류: "+error.message);
-  else if(data.session) authMessage("회원가입과 로그인이 완료됐어!");
-  else authMessage("가입 요청 완료! 이메일 인증 링크를 확인해 줘.");
+  try{
+    await firebaseAuth.createUserWithEmailAndPassword(email,password);
+    authMessage("회원가입과 로그인이 완료됐어!");
+  }catch(error){authMessage("회원가입 오류: "+(error.code||error.message));}
 });
 $("#authSignIn").addEventListener("click",async()=>{
-  if(!supabaseClient){authMessage("먼저 Supabase 프로젝트 설정이 필요해.");return;}
+  if(!firebaseAuth){authMessage("먼저 Firebase 웹 앱 설정을 연결해야 해.");return;}
   const email=$("#authEmail").value.trim(),password=$("#authPassword").value;
   if(!email||!password){authMessage("이메일과 비밀번호를 입력해 줘.");return;}
-  const {error}=await supabaseClient.auth.signInWithPassword({email,password});
-  authMessage(error?"로그인 오류: "+error.message:"로그인했어!");
+  try{
+    await firebaseAuth.signInWithEmailAndPassword(email,password);
+    authMessage("로그인했어!");
+  }catch(error){authMessage("로그인 오류: "+(error.code||error.message));}
 });
 $("#authSignOut").addEventListener("click",async()=>{
-  if(!supabaseClient){authMessage("로그인 서비스가 연결되지 않았어.");return;}
-  const {error}=await supabaseClient.auth.signOut();
-  authMessage(error?"로그아웃 오류: "+error.message:"로그아웃했어.");
+  if(!firebaseAuth){authMessage("Firebase 로그인 서비스가 연결되지 않았어.");return;}
+  try{await firebaseAuth.signOut();authMessage("로그아웃했어.");}
+  catch(error){authMessage("로그아웃 오류: "+(error.code||error.message));}
 });
 
 
