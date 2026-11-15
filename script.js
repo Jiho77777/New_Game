@@ -1,68 +1,32 @@
-const scoreEl = document.querySelector("#score");
-const timeEl = document.querySelector("#time");
-const bestEl = document.querySelector("#best");
-const target = document.querySelector("#target");
-const arena = document.querySelector("#arena");
-const message = document.querySelector("#message");
-const startButton = document.querySelector("#start");
-
-let score = 0;
-let timeLeft = 30;
-let timerId = null;
-let playing = false;
-let best = Number(localStorage.getItem("new-game-best") || 0);
-bestEl.textContent = best;
-
-function moveTarget() {
-  const maxX = Math.max(0, arena.clientWidth - target.offsetWidth);
-  const maxY = Math.max(0, arena.clientHeight - target.offsetHeight);
-  target.style.left = Math.round(Math.random() * maxX) + "px";
-  target.style.top = Math.round(Math.random() * maxY) + "px";
-}
-
-function finishGame() {
-  playing = false;
-  clearInterval(timerId);
-  target.hidden = true;
-  message.hidden = false;
-  message.textContent = `Time's up! You scored ${score} points.`;
-  startButton.textContent = "PLAY AGAIN";
-  if (score > best) {
-    best = score;
-    localStorage.setItem("new-game-best", String(best));
-    bestEl.textContent = best;
-  }
-}
-
-function startGame() {
-  clearInterval(timerId);
-  score = 0;
-  timeLeft = 30;
-  playing = true;
-  scoreEl.textContent = score;
-  timeEl.textContent = timeLeft;
-  message.hidden = true;
-  target.hidden = false;
-  startButton.textContent = "PLAYING...";
-  moveTarget();
-
-  timerId = setInterval(() => {
-    timeLeft -= 1;
-    timeEl.textContent = timeLeft;
-    if (timeLeft <= 0) finishGame();
-  }, 1000);
-}
-
-target.addEventListener("click", () => {
-  if (!playing) return;
-  score += 1;
-  scoreEl.textContent = score;
-  moveTarget();
-});
-
-startButton.addEventListener("click", () => {
-  if (!playing) startGame();
-});
-window.addEventListener("resize", () => {
-  if (playing) moveTarget();
-});
+const $ = (s) => document.querySelector(s);
+const state = { type: "click", title: "별을 모아라!", intro: "제한 시간 안에 반짝이는 별을 많이 모아 봐!", seconds: 30, color: "#7867f5", button: "게임 시작!", question: "대한민국의 수도는 어디일까?", answer: "서울", score: 0, time: 30, running: false, timer: null, waiting: false, startedAt: 0 };
+const controls = { title: $("#gameTitle"), intro: $("#gameIntro"), seconds: $("#gameTime"), color: $("#themeColor"), button: $("#buttonText"), question: $("#quizQuestion"), answer: $("#quizAnswer") };
+let toastTimer;
+function toast(message){const el=$("#toast");el.textContent=message;el.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("show"),2200);}
+function saveDraft(){try{localStorage.setItem("game-studio-draft",JSON.stringify({type:state.type,title:state.title,intro:state.intro,seconds:state.seconds,color:state.color,button:state.button,question:state.question,answer:state.answer}));$("#saveStatus").textContent="자동 저장됨";}catch(e){$("#saveStatus").textContent="자동 저장 사용 불가";}}
+function updatePreview(){ $("#previewTitle").textContent=state.title||"나만의 게임";$("#previewIntro").textContent=state.intro;$("#previewTime").textContent=state.seconds;$("#previewScore").textContent="0";$("#playButton").textContent=state.button||"게임 시작!";$("#gameScreen").style.setProperty("--accent",state.color);$("#quizPreviewQuestion").textContent=state.question;$("#quizSettings").hidden=state.type!=="quiz";$("#quizArea").hidden=state.type!=="quiz";$("#playArea").hidden=state.type==="quiz";$("#colorName").textContent=state.color.toUpperCase();$("#playMessage").innerHTML="준비됐어?<br>시작 버튼을 눌러 봐!";$("#gameTarget").textContent=state.type==="reaction"?"⚡":"✦";$("#gameTarget").style.background=state.color;$("#gameTarget").hidden=true;$("#playButton").hidden=false;$("#playButton").disabled=false;$("#quizInput").value="";state.score=0;state.time=state.seconds;$("#previewScore").textContent="0";$("#previewTime").textContent=state.time;saveDraft();}
+function stopGame(){clearInterval(state.timer);state.running=false;state.waiting=false;$("#gameTarget").hidden=true;$("#playButton").disabled=false;$("#playButton").textContent="다시 시작";$("#playMessage").textContent="게임 종료! 점수: "+state.score;$("#playMessage").hidden=false;}
+function finishGame(message){clearInterval(state.timer);state.running=false;state.waiting=false;$("#gameTarget").hidden=true;$("#playButton").disabled=false;$("#playButton").textContent="다시 시작";$("#playMessage").textContent=message;$("#playMessage").hidden=false;}
+function tick(){state.time--;$("#previewTime").textContent=state.time;if(state.time<=0)finishGame("시간 종료! 최종 점수: "+state.score);}
+function startClickGame(){state.score=0;state.time=state.seconds;state.running=true;$("#previewScore").textContent="0";$("#previewTime").textContent=state.time;$("#playMessage").hidden=true;$("#playButton").disabled=true;$("#playButton").textContent="플레이 중…";const target=$("#gameTarget");target.hidden=false;moveTarget();state.timer=setInterval(tick,1000);}
+function moveTarget(){const area=$("#playArea"),target=$("#gameTarget");const maxX=Math.max(0,area.clientWidth-target.offsetWidth-12),maxY=Math.max(0,area.clientHeight-target.offsetHeight-12);target.style.left=(6+Math.random()*maxX)+"px";target.style.top=(6+Math.random()*maxY)+"px";}
+function startReaction(){state.score=0;state.time=state.seconds;state.running=true;state.waiting=true;state.startedAt=0;$("#previewScore").textContent="0";$("#previewTime").textContent=state.time;$("#playMessage").hidden=false;$("#playMessage").textContent="초록색으로 바뀔 때까지 기다려!";$("#playButton").disabled=true;$("#playButton").textContent="기다리는 중…";const target=$("#gameTarget");target.hidden=false;target.style.left="50%";target.style.top="50%";target.style.transform="translate(-50%,-50%)";target.style.background="#a4a5b4";target.textContent="…";const delay=1200+Math.random()*2200;state.timer=setInterval(tick,1000);setTimeout(()=>{if(!state.running||!state.waiting)return;state.waiting=false;state.startedAt=performance.now();target.style.background="#25c98a";target.textContent="GO!";},delay);}
+function startQuiz(){state.score=0;state.time=state.seconds;state.running=true;$("#previewScore").textContent="0";$("#previewTime").textContent=state.time;$("#playButton").hidden=true;$("#quizArea").hidden=false;$("#quizInput").focus();state.timer=setInterval(tick,1000);}
+function startGame(){clearInterval(state.timer);state.running=false;state.waiting=false;$("#playButton").hidden=false;$("#quizArea").hidden=true;$("#playMessage").hidden=false;$("#gameTarget").style.transform="none";if(state.type==="click")startClickGame();else if(state.type==="reaction")startReaction();else startQuiz();}
+Object.entries(controls).forEach(([key,el])=>{el.addEventListener("input",()=>{state[key]=key==="seconds"?Number(el.value):el.value;updatePreview();});el.addEventListener("change",()=>{state[key]=key==="seconds"?Number(el.value):el.value;updatePreview();});});
+document.querySelectorAll(".template-card").forEach(btn=>btn.addEventListener("click",()=>{document.querySelectorAll(".template-card").forEach(b=>b.classList.remove("selected"));btn.classList.add("selected");state.type=btn.dataset.type;updatePreview();}));
+$("#playButton").addEventListener("click",startGame);
+$("#gameTarget").addEventListener("click",()=>{if(!state.running)return;if(state.type==="click"){state.score++;$("#previewScore").textContent=state.score;moveTarget();}else if(state.type==="reaction"){if(state.waiting){finishGame("앗! 너무 빨랐어. 다시 도전!");return;}const ms=Math.round(performance.now()-state.startedAt);state.score=ms;$("#previewScore").textContent=ms+"ms";finishGame("반응속도 "+ms+"ms! 다시 도전해 봐.");}});
+$("#quizSubmit").addEventListener("click",()=>{if(!state.running)return;const value=$("#quizInput").value.trim();if(value&&value.toLocaleLowerCase()===state.answer.trim().toLocaleLowerCase()){state.score+=10;$("#previewScore").textContent=state.score;finishGame("정답! +10점 획득!");}else toast("아쉽지만 정답이 아니야. 다시 생각해 봐!");});
+$("#quizInput").addEventListener("keydown",e=>{if(e.key==="Enter")$("#quizSubmit").click();});
+function escapeHtml(value){return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function makeExport(){const title=escapeHtml(state.title||"나만의 게임"),intro=escapeHtml(state.intro),color=state.color,seconds=state.seconds,button=escapeHtml(state.button||"게임 시작!"),type=state.type,question=escapeHtml(state.question),answer=escapeHtml(state.answer);let gameScript="";
+if(type==="click")gameScript=`let score=0,left=${seconds},timer;function move(){const x=Math.random()*Math.max(0,area.clientWidth-54),y=Math.random()*Math.max(0,area.clientHeight-54);target.style.left=x+'px';target.style.top=y+'px'}function start(){clearInterval(timer);score=0;left=${seconds};scoreEl.textContent=score;timeEl.textContent=left;msg.hidden=true;target.hidden=false;btn.disabled=true;move();timer=setInterval(()=>{timeEl.textContent=--left;if(left<=0){clearInterval(timer);target.hidden=true;msg.hidden=false;msg.textContent='끝! 점수: '+score;btn.disabled=false;btn.textContent='다시 시작'}},1000)}target.onclick=()=>{score++;scoreEl.textContent=score;move()};btn.onclick=start;`;
+else if(type==="quiz")gameScript=`let left=${seconds},timer;function start(){clearInterval(timer);left=${seconds};timeEl.textContent=left;scoreEl.textContent='0';msg.hidden=true;quiz.hidden=false;btn.hidden=true;answerInput.value='';timer=setInterval(()=>{timeEl.textContent=--left;if(left<=0){clearInterval(timer);msg.hidden=false;msg.textContent='시간 종료!';quiz.hidden=true;btn.hidden=false;btn.textContent='다시 시작'}},1000)}btn.onclick=start;submit.onclick=()=>{if(answerInput.value.trim().toLowerCase()===${JSON.stringify(answer.toLowerCase())}){clearInterval(timer);scoreEl.textContent='10';msg.hidden=false;msg.textContent='정답! +10점';quiz.hidden=true;btn.hidden=false;btn.textContent='다시 시작'}else alert('다시 생각해 봐!')};`;
+else gameScript=`let left=${seconds},timer,waiting=false,started=0;function start(){clearInterval(timer);left=${seconds};timeEl.textContent=left;msg.textContent='초록색이 될 때까지 기다려!';msg.hidden=false;target.hidden=false;target.textContent='…';target.style.background='#aaa';btn.disabled=true;waiting=true;timer=setInterval(()=>{timeEl.textContent=--left;if(left<=0){clearInterval(timer);target.hidden=true;msg.textContent='시간 종료!';btn.disabled=false;btn.textContent='다시 시작'}},1000);setTimeout(()=>{if(!waiting)return;waiting=false;started=performance.now();target.textContent='GO!';target.style.background='#25c98a'},1500+Math.random()*1800)}target.onclick=()=>{if(waiting){waiting=false;clearInterval(timer);msg.textContent='너무 빨랐어!';target.hidden=true;btn.disabled=false;btn.textContent='다시 시작'}else if(started){clearInterval(timer);const ms=Math.round(performance.now()-started);scoreEl.textContent=ms+'ms';msg.textContent='반응속도 '+ms+'ms!';target.hidden=true;btn.disabled=false;btn.textContent='다시 시작'}};btn.onclick=start;`;
+const extra=type==="quiz"?'<div id="quiz" hidden><p>'+question+'</p><input id="answerInput" placeholder="정답 입력"><button id="submit">정답 확인</button></div>':'';
+const htmlDoc='<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+title+'</title><style>*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;background:#f4f3fb;font-family:system-ui,sans-serif;color:#24243b}.card{width:min(100%,480px);padding:28px;border-radius:24px;background:white;text-align:center;box-shadow:0 12px 40px #2222}h1{font-size:32px;margin:12px 0}p{color:#777} .stats{display:flex;justify-content:center;gap:14px;margin:20px}.stats div{background:#f4f4fa;padding:12px 24px;border-radius:12px}.area{height:190px;position:relative;background:#f8f7ff;border:1px dashed '+color+'66;border-radius:16px;overflow:hidden;display:grid;place-items:center}#target{position:absolute;width:54px;height:54px;border:0;border-radius:50%;background:'+color+';color:white;font-size:24px;touch-action:manipulation}button{border:0;border-radius:12px;background:'+color+';color:white;padding:14px 20px;font-weight:800;cursor:pointer;margin-top:14px}input{padding:12px;border:1px solid #ddd;border-radius:9px;width:100%;margin:8px 0}</style><main class="card"><small>MY GAME</small><h1>'+title+'</h1><p>'+intro+'</p><div class="stats"><div>점수<br><b id="scoreEl">0</b></div><div>남은 시간<br><b id="timeEl">'+seconds+'</b></div></div><div class="area" id="area"><p id="msg">시작 버튼을 눌러 봐!</p><button id="target" hidden>✦</button></div>'+extra+'<button id="btn">'+button+'</button></main><script>const $=id=>document.getElementById(id),area=$("area"),target=$("target"),msg=$("msg"),btn=$("btn"),scoreEl=$("scoreEl"),timeEl=$("timeEl");'+(type==="quiz"?'const quiz=$("quiz"),answerInput=$("answerInput"),submit=$("submit");':'')+gameScript+'<\/script></html>';
+const blob=new Blob([htmlDoc],{type:"text/html;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="my-game.html";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);toast("내 게임 파일을 다운로드했어!");}
+$("#exportTop").addEventListener("click",makeExport);$("#exportBottom").addEventListener("click",makeExport);
+function restoreDraft(){try{const saved=JSON.parse(localStorage.getItem("game-studio-draft")||"null");if(!saved)return;Object.keys(controls).forEach(k=>{if(saved[k]!==undefined){controls[k].value=saved[k];state[k]=saved[k];}});if(saved.type){state.type=saved.type;document.querySelectorAll(".template-card").forEach(b=>b.classList.toggle("selected",b.dataset.type===saved.type));}}catch(e){}}
+restoreDraft();updatePreview();
