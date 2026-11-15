@@ -1,0 +1,19 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 각 사용자의 저장 게임은 본인만 읽고 수정할 수 있어.
+    match /users/{userId}/games/{gameId} {
+      allow read, create, update, delete:
+        if request.auth != null && request.auth.uid == userId;
+    }
+
+    // 로그인한 사용자에게만 공개 게임 목록을 보여 줘.
+    // 공개 게임은 원래 제작자만 등록·수정·삭제할 수 있어.
+    match /publicGames/{gameId} {
+      allow read: if request.auth != null;
+      allow create, update, delete:
+        if request.auth != null
+        && request.resource.data.ownerId == request.auth.uid;
+    }
+  }
+}
