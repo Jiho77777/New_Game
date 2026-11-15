@@ -292,6 +292,19 @@ async function refreshGlobalGames(){
  }catch(e){status.textContent="글로벌 맵을 불러오지 못했어. Firestore 보안 규칙을 확인해 줘.";console.error(e);}
 }
 $("#refreshGlobalGames")?.addEventListener("click",refreshGlobalGames);
+
+document.querySelectorAll("[data-community-tab]").forEach(tab=>{
+ tab.addEventListener("click",()=>{
+  const selected=tab.dataset.communityTab;
+  document.querySelectorAll("[data-community-tab]").forEach(item=>{
+   const active=item===tab;item.classList.toggle("active",active);item.setAttribute("aria-selected",active?"true":"false");
+  });
+  $("#savedGamesPanel").hidden=selected!=="mine";
+  $("#globalGamesPanel").hidden=selected!=="global";
+  if(selected==="global")refreshGlobalGames();
+ });
+});
+
 function snapshotGame(){return {type:state.type,title:state.title,intro:state.intro,seconds:state.seconds,color:state.color,button:state.button,question:state.question,answer:state.answer,levelObjects:state.levelObjects,clickPower:state.clickPower,upgradeName:state.upgradeName,upgradeCost:state.upgradeCost,upgradeGain:state.upgradeGain,autoCost:state.autoCost,autoRate:state.autoRate,customUpgrades:state.customUpgrades||[]};}
 function loadSavedGame(game){if(!game)return;Object.keys(game).forEach(k=>{if(k in state)state[k]=game[k];});Object.keys(controls).forEach(k=>{if(game[k]!==undefined)controls[k].value=game[k];});["clickPower","upgradeName","upgradeCost","upgradeGain","autoCost","autoRate"].forEach(k=>{const el=$("#"+k);if(el&&game[k]!==undefined)el.value=game[k];});document.querySelectorAll(".template-card").forEach(b=>b.classList.toggle("selected",b.dataset.type===state.type));renderCustomUpgradeEditor();updatePreview();chooseObject(-1);setStep("1");toast("저장된 게임을 불러왔어!");}
 $("#saveGameButton").addEventListener("click",async()=>{
