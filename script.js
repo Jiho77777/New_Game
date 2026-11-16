@@ -1,5 +1,57 @@
 const $ = (s) => document.querySelector(s);
 
+const UI_EN = {
+  "자동 저장 켜짐":"Autosave on","자동 저장됨":"Saved automatically","자동 저장 사용 불가":"Autosave unavailable",
+  "게임 내보내기 ↓":"Export Game ↓","✦ AI 제작":"✦ AI Studio","로그인":"Log in","로그아웃":"Log out",
+  "계정 로그인":"Account Login","Firebase 계정으로 이메일 회원가입과 로그인을 할 수 있어.":"Create an account or log in with your email using Firebase.",
+  "이메일":"Email","비밀번호":"Password","Google 계정으로 로그인":"Continue with Google","회원가입":"Sign up","이메일 로그인":"Log in with Email",
+  "상상한 게임을":"Create the game","직접 만들어 봐!":"you imagine!","코딩은 몰라도 괜찮아. 게임 종류를 고르고, 글자와 색을 바꾸면 완성!":"No coding needed. Choose a game type, then customize its text and colors!",
+  "게임 꾸미기":"Customize","플레이 미리보기":"Play Preview","내 게임":"My Games","글로벌 맵":"Global Games",
+  "어떤 게임을 만들까?":"Choose a game type","클릭 게임":"Clicker","빠르게 눌러 점수 얻기":"Tap quickly to score",
+  "퀴즈 게임":"Quiz","정답을 맞혀 보상 받기":"Answer questions for rewards","반응속도":"Reaction","신호가 오면 재빨리 누르기":"Tap when the signal appears",
+  "2D 플랫포머":"2D Platformer","달리고 점프해서 코인 모으기":"Run, jump, and collect coins",
+  "게임 이름":"Game Title","게임 설명":"Game Description","플레이 시간":"Play Time","대표 색상":"Main Color",
+  "퀴즈 질문":"Quiz Question","정답":"Answer","클릭 게임 성장 시스템":"Clicker Progression","처음 클릭 보상":"Starting Click Reward",
+  "업그레이드 이름":"Upgrade Name","업그레이드 가격":"Upgrade Cost","클릭 보상 증가량":"Click Reward Increase",
+  "자동 수익 가격":"Auto-Earn Cost","초당 자동 수익":"Auto-Earn per Second","추가 업그레이드":"Extra Upgrades","＋ 업그레이드 추가":"+ Add Upgrade",
+  "레벨 1":"Level 1","레벨 2":"Level 2","레벨 3":"Level 3","레벨 4":"Level 4","레벨 5":"Level 5",
+  "배경 테마":"Background Theme","캔디":"Candy","초원":"Meadow","화산":"Volcano","직접 색상":"Custom Color","배경 색상":"Background Color",
+  "선택/이동":"Select / Move","정사각형 블록":"Square Block","긴 블록":"Long Block","레이저":"Laser","코인":"Coin","가시":"Spike",
+  "선택된 오브젝트 없음":"No object selected","가로 크기":"Width","세로 크기":"Height","오브젝트 색상":"Object Color",
+  "선택한 오브젝트 삭제":"Delete Selected Object","캔버스 비우기":"Clear Canvas",
+  "블록은 1×1 칸 크기로 설치돼. 선택 모드에서 끌어서 이동하거나 크기를 바꿀 수 있어.":"Blocks are placed on a 1×1 grid. Use Select mode to drag or resize them.",
+  "시작 버튼 글자":"Start Button Text","바꾼 내용은 오른쪽 미리보기에 바로 반영돼.":"Your changes appear in the preview right away.",
+  "직접 플레이해 보기":"Play Your Game","내 게임 미리보기":"Game Preview","점수":"Score","남은 시간":"Time Left",
+  "준비됐어?":"Ready?","시작 버튼을 눌러 봐!":"Press Start to play!","업그레이드 상점":"Upgrade Shop",
+  "점프":"Jump","정답 확인":"Check Answer","저장된 게임":"Saved Games","로그인 전용":"Login Required",
+  "로그인한 계정에 내 게임을 저장하고, 언제든 다시 불러올 수 있어.":"Save games to your account and load them again anytime.",
+  "저장할 게임 이름":"Name this game","현재 게임 저장":"Save Current Game","로그인하면 저장된 게임을 볼 수 있어.":"Log in to view your saved games.",
+  "공개 게임":"Public Games","다른 사람들이 공개한 게임을 찾아서 플레이해 봐! 로그인한 사용자만 이용할 수 있어.":"Find and play games shared by other people. Login is required.",
+  "새로고침":"Refresh","로그인하면 공개된 게임을 볼 수 있어.":"Log in to browse public games.",
+  "AI에게 게임 만들기":"Build a Game with AI","게임 편집기로 돌아가기":"Back to Game Editor",
+  "원하는 게임을 말로 설명하면 AI가 게임을 설계하고 제작하도록 도와주는 공간이야.":"Describe the game you want and AI can help design and build it.",
+  "어떤 게임을 만들고 싶어?":"What kind of game do you want to make?","AI로 만들기":"Build with AI",
+  "내 게임 완성!":"Your Game Is Ready!","만든 게임을 HTML 파일로 저장하면 브라우저에서 바로 실행할 수 있어.":"Save your game as an HTML file and run it in a browser.",
+  "내 게임 다운로드":"Download My Game","누구나 만드는 나만의 게임":"A game studio anyone can use"
+};
+function applyLanguage(lang){
+  const english=lang==="en";
+  document.documentElement.lang=english?"en":"ko";
+  const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+  let node;
+  while((node=walker.nextNode())){
+    const parent=node.parentElement;
+    if(!parent||parent.closest("script,style,textarea,input,canvas,.intro-sticker,#previewTitle,#previewIntro,#quizPreviewQuestion"))continue;
+    if(node.__koText===undefined)node.__koText=node.nodeValue;
+    const original=node.__koText.trim();
+    if(!original)continue;
+    const translated=UI_EN[original];
+    if(english&&translated)node.nodeValue=node.__koText.replace(original,translated);
+    else if(!english)node.nodeValue=node.__koText;
+  }
+  try{localStorage.setItem("game-studio-language",english?"en":"ko");}catch(e){}
+}
+
 function setStep(step){
   const selected=["1","2","3","4"].includes(String(step))?String(step):"1";
   document.querySelectorAll("[data-step-tab]").forEach(tab=>{
@@ -38,6 +90,8 @@ document.addEventListener("keydown",event=>{
   document.querySelector('[data-step-tab="'+next+'"]')?.focus();
 });
 setStep("1");
+const languageSelect=$("#languageSelect");
+if(languageSelect){let savedLanguage="ko";try{savedLanguage=localStorage.getItem("game-studio-language")||"ko";}catch(e){}languageSelect.value=savedLanguage;applyLanguage(savedLanguage);languageSelect.addEventListener("change",()=>applyLanguage(languageSelect.value));}
 const defaultLevel=()=>[];
 const state = {levelObjects:defaultLevel(),platformLevels:[[],[],[],[],[]],platformBackgrounds:["candy","meadow","volcano","candy","meadow"],platformBgColors:["#bdefff","#a9df9a","#f3a078","#bdefff","#a9df9a"],editorLevel:0,playLevelIndex:0,selectedObject:-1,activeTool:"select",type:"click", title: "별을 모아라!", intro: "제한 시간 안에 반짝이는 별을 많이 모아 봐!", seconds: 30, color: "#7867f5", button: "게임 시작!", question: "대한민국의 수도는 어디일까?", answer: "서울", clickPower:1, upgradeName:"강화 클릭", upgradeCost:25, upgradeGain:1, autoCost:50, autoRate:1, currentClickPower:1, currentUpgradeCost:25, currentAutoCost:50, passiveRate:0, customUpgrades:[], score: 0, time: 30, running: false, timer: null, waiting: false, startedAt: 0 };
 const controls = { title: $("#gameTitle"), intro: $("#gameIntro"), seconds: $("#gameTime"), color: $("#themeColor"), button: $("#buttonText"), question: $("#quizQuestion"), answer: $("#quizAnswer") };
