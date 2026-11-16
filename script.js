@@ -277,8 +277,15 @@ async function refreshGlobalGames(){
  if(!firebaseDb){status.textContent="Firestore 데이터베이스 설정이 필요해.";return;}
  status.textContent="공개된 게임을 불러오는 중…";
  try{
-  const snap=await firebaseDb.collection("publicGames").where("isPublic","==",true).orderBy("updatedAt","desc").get();
-  const docs=snap.docs.filter(doc=>doc.data().isPublic&&doc.data().game);
+  // 복합 인덱스가 필요하지 않도록 공개 게임을 가져온 뒤 브라우저에서 정렬해.
+  const snap=await firebaseDb.collection("publicGames").where("isPublic","==",true).get();
+  const docs=snap.docs
+   .filter(doc=>doc.data().isPublic&&doc.data().game)
+   .sort((a,b)=>{
+    const aTime=a.data().updatedAt?.toMillis?.()||0;
+    const bTime=b.data().updatedAt?.toMillis?.()||0;
+    return bTime-aTime;
+   });
   if(!docs.length){status.textContent="아직 공개된 게임이 없어. 내 게임을 공개하면 여기에 표시돼!";return;}
   status.textContent=docs.length+"개의 공개 게임을 찾았어.";
   docs.forEach(doc=>{
@@ -289,7 +296,11 @@ async function refreshGlobalGames(){
    play.onclick=()=>{loadSavedGame(data.game);setStep("2");$("#playButton").click();toast("공개 게임을 플레이하고 있어! 원본은 변경되지 않아.");};
    card.append(title,meta,play);list.appendChild(card);
   });
- }catch(e){status.textContent="글로벌 맵을 불러오지 못했어. Firestore 보안 규칙을 확인해 줘.";console.error(e);}
+ }catch(e){
+  const detail=[e.code,e.message].filter(Boolean).join(" — ");
+  status.textContent="글로벌 맵을 불러오지 못했어."+(detail?" 원인: "+detail:" 자세한 내용은 콘솔을 확인해 줘.");
+  console.error("글로벌 맵 Firestore 오류:",e);
+ }
 }
 $("#refreshGlobalGames")?.addEventListener("click",refreshGlobalGames);
 
