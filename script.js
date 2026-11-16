@@ -1,7 +1,7 @@
 const $ = (s) => document.querySelector(s);
 
 function setStep(step){
-  const selected=String(step)==="2"?"2":"1";
+  const selected=["1","2","3","4"].includes(String(step))?String(step):"1";
   document.querySelectorAll("[data-step-tab]").forEach(tab=>{
     const active=tab.dataset.stepTab===selected;
     tab.classList.toggle("active",active);
@@ -15,10 +15,11 @@ function setStep(step){
   });
   const grid=document.querySelector(".studio-grid");
   if(grid){
-    grid.classList.toggle("step-one",selected==="1");
-    grid.classList.toggle("step-two",selected==="2");
+    grid.classList.remove("step-one","step-two","step-three","step-four");
+    grid.classList.add("step-"+({1:"one",2:"two",3:"three",4:"four"}[selected]));
   }
   document.documentElement.dataset.activeStep=selected;
+  if(selected==="4")refreshGlobalGames();
 }
 document.addEventListener("click",event=>{
   const tab=event.target.closest("[data-step-tab]");
@@ -30,9 +31,9 @@ document.addEventListener("keydown",event=>{
   const tab=event.target.closest("[data-step-tab]");
   if(!tab || !["ArrowLeft","ArrowRight","Home","End"].includes(event.key))return;
   event.preventDefault();
-  const next=event.key==="Home"?"1":event.key==="End"?"2":
-    event.key==="ArrowRight"?(tab.dataset.stepTab==="1"?"2":"1"):
-    (tab.dataset.stepTab==="2"?"1":"2");
+  const current=Number(tab.dataset.stepTab);
+  const next=event.key==="Home"?1:event.key==="End"?4:
+    event.key==="ArrowRight"?Math.min(4,current+1):Math.max(1,current-1);
   setStep(next);
   document.querySelector('[data-step-tab="'+next+'"]')?.focus();
 });
@@ -303,18 +304,6 @@ async function refreshGlobalGames(){
  }
 }
 $("#refreshGlobalGames")?.addEventListener("click",refreshGlobalGames);
-
-document.querySelectorAll("[data-community-tab]").forEach(tab=>{
- tab.addEventListener("click",()=>{
-  const selected=tab.dataset.communityTab;
-  document.querySelectorAll("[data-community-tab]").forEach(item=>{
-   const active=item===tab;item.classList.toggle("active",active);item.setAttribute("aria-selected",active?"true":"false");
-  });
-  $("#savedGamesPanel").hidden=selected!=="mine";
-  $("#globalGamesPanel").hidden=selected!=="global";
-  if(selected==="global")refreshGlobalGames();
- });
-});
 
 function snapshotGame(){return {type:state.type,title:state.title,intro:state.intro,seconds:state.seconds,color:state.color,button:state.button,question:state.question,answer:state.answer,levelObjects:state.levelObjects,clickPower:state.clickPower,upgradeName:state.upgradeName,upgradeCost:state.upgradeCost,upgradeGain:state.upgradeGain,autoCost:state.autoCost,autoRate:state.autoRate,customUpgrades:state.customUpgrades||[]};}
 function loadSavedGame(game){if(!game)return;Object.keys(game).forEach(k=>{if(k in state)state[k]=game[k];});Object.keys(controls).forEach(k=>{if(game[k]!==undefined)controls[k].value=game[k];});["clickPower","upgradeName","upgradeCost","upgradeGain","autoCost","autoRate"].forEach(k=>{const el=$("#"+k);if(el&&game[k]!==undefined)el.value=game[k];});document.querySelectorAll(".template-card").forEach(b=>b.classList.toggle("selected",b.dataset.type===state.type));renderCustomUpgradeEditor();updatePreview();chooseObject(-1);setStep("1");toast("저장된 게임을 불러왔어!");}
