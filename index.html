@@ -10,12 +10,12 @@
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js" defer></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js" defer></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js" defer></script>
-  <script src="script.js?v=16" defer></script>
+  <script src="script.js?v=17" defer></script>
 </head>
 <body>
   <header class="site-header">
     <a class="brand" href="#" aria-label="Game Studio 홈"><span class="brand-mark">G</span><span>Game Studio</span></a>
-    <div class="header-actions"><span class="save-status" id="saveStatus">자동 저장 켜짐</span><div class="header-button-row"><span id="authHeaderStatus" class="auth-header-status" hidden>로그인되었습니다!</span><button class="button button-primary" id="exportTop">게임 내보내기 ↓</button><button class="button ai-tab-button" id="openAiTab" type="button" aria-controls="aiStudio" aria-expanded="false">✦ AI 제작</button><button class="button login-top-button" id="openLoginPanel" type="button">로그인</button></div></div>
+    <div class="header-actions"><span class="save-status" id="saveStatus">자동 저장 켜짐</span><select id="languageSelect" class="language-select" aria-label="Language"><option value="ko">한국어</option><option value="en">English</option></select><div class="header-button-row"><span id="authHeaderStatus" class="auth-header-status" hidden>로그인되었습니다!</span><button class="button button-primary" id="exportTop">게임 내보내기 ↓</button><button class="button ai-tab-button" id="openAiTab" type="button" aria-controls="aiStudio" aria-expanded="false">✦ AI 제작</button><button class="button login-top-button" id="openLoginPanel" type="button">로그인</button></div></div>
   </header>
 
   <main class="workspace">
@@ -104,7 +104,7 @@
         </div>
         <div class="field-group" id="platformerSettings" hidden>
           <p class="field-note">레벨 1~5를 각각 꾸밀 수 있어. 레벨을 선택하고 맵을 편집해 봐!</p><div class="platform-level-tabs" id="platformLevelTabs" aria-label="플랫포머 레벨 선택"><button type="button" class="platform-level-tab active" data-level="0">레벨 1</button><button type="button" class="platform-level-tab" data-level="1">레벨 2</button><button type="button" class="platform-level-tab" data-level="2">레벨 3</button><button type="button" class="platform-level-tab" data-level="3">레벨 4</button><button type="button" class="platform-level-tab" data-level="4">레벨 5</button></div>
-          <div class="platform-background-settings"><label for="platformBackground">背景主题</label><select id="platformBackground"><option value="candy">캔디</option><option value="meadow">초원</option><option value="volcano">화산</option><option value="custom">직접 색상</option></select><label for="platformBgColor">배경 색상</label><input id="platformBgColor" type="color" value="#bdefff"></div>
+          <div class="platform-background-settings"><label for="platformBackground">배경 테마</label><select id="platformBackground"><option value="candy">캔디</option><option value="meadow">초원</option><option value="volcano">화산</option><option value="custom">직접 색상</option></select><label for="platformBgColor">배경 색상</label><input id="platformBgColor" type="color" value="#bdefff"></div>
           <div class="map-tools"><button type="button" class="map-tool selected" data-tool="select">선택/이동</button><button type="button" class="map-tool" data-tool="block">정사각형 블록</button><button type="button" class="map-tool" data-tool="longBlock">긴 블록</button><button type="button" class="map-tool" data-tool="laser">레이저</button><button type="button" class="map-tool" data-tool="coin">코인</button><button type="button" class="map-tool" data-tool="spike">가시</button></div>
           <div class="platformer-area map-editor-frame"><canvas id="mapEditorCanvas" width="640" height="300" aria-label="맵 편집 캔버스"></canvas></div>
           <div class="object-properties"><strong id="selectedObjectLabel">선택된 오브젝트 없음</strong><div class="field-row"><label class="grow">가로 크기<input id="objectWidth" type="number" min="10" max="600" value="180"></label><label class="grow">세로 크기<input id="objectHeight" type="number" min="8" max="120" value="22"></label></div><label class="field-label" for="objectColor">오브젝트 색상</label><input id="objectColor" type="color" value="#7867f5"><button type="button" class="button button-remove" id="deleteObject" disabled>선택한 오브젝트 삭제</button></div>
