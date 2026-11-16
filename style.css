@@ -246,3 +246,7 @@
 .platform-level-tab.active{background:#282842;color:#fff;border-color:#282842}
 #mapEditorCanvas,#platformerCanvas{width:100%;height:auto;aspect-ratio:640/300;object-fit:fill}
 @media(max-width:390px){.platform-level-tabs{gap:4px}.platform-level-tab{font-size:10px;min-height:40px}}
+
+.map-editor-frame{margin-top:8px}
+.map-editor-frame #mapEditorCanvas{display:block;width:100%;height:auto;aspect-ratio:640/300;box-sizing:border-box}
+.platformer-area #platformerCanvas{display:block;width:100%;height:auto;aspect-ratio:640/300;box-sizing:border-box}
