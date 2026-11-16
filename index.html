@@ -6,11 +6,11 @@
   <meta name="theme-color" content="#101827">
   <meta name="description" content="코딩 없이 나만의 브라우저 게임을 만드는 쉬운 게임 제작 도구">
   <title>Game Studio - 나만의 게임 만들기</title>
-  <link rel="stylesheet" href="style.css?v=11">
+  <link rel="stylesheet" href="style.css?v=12">
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js" defer></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js" defer></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js" defer></script>
-  <script src="script.js?v=11" defer></script>
+  <script src="script.js?v=12" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -104,7 +104,7 @@
         </div>
         <div class="field-group" id="platformerSettings" hidden>
           <p class="field-note">레벨 1~5를 각각 꾸밀 수 있어. 레벨을 선택하고 맵을 편집해 봐!</p><div class="platform-level-tabs" id="platformLevelTabs" aria-label="플랫포머 레벨 선택"><button type="button" class="platform-level-tab active" data-level="0">레벨 1</button><button type="button" class="platform-level-tab" data-level="1">레벨 2</button><button type="button" class="platform-level-tab" data-level="2">레벨 3</button><button type="button" class="platform-level-tab" data-level="3">레벨 4</button><button type="button" class="platform-level-tab" data-level="4">레벨 5</button></div>
-          <div class="map-tools"><button type="button" class="map-tool selected" data-tool="select">선택/이동</button><button type="button" class="map-tool" data-tool="block">블록</button><button type="button" class="map-tool" data-tool="laser">레이저</button><button type="button" class="map-tool" data-tool="coin">코인</button><button type="button" class="map-tool" data-tool="spike">가시</button></div>
+          <div class="map-tools"><button type="button" class="map-tool selected" data-tool="select">선택/이동</button><button type="button" class="map-tool" data-tool="block">정사각형 블록</button><button type="button" class="map-tool" data-tool="longBlock">긴 블록</button><button type="button" class="map-tool" data-tool="laser">레이저</button><button type="button" class="map-tool" data-tool="coin">코인</button><button type="button" class="map-tool" data-tool="spike">가시</button></div>
           <div class="platformer-area map-editor-frame"><canvas id="mapEditorCanvas" width="640" height="300" aria-label="맵 편집 캔버스"></canvas></div>
           <div class="object-properties"><strong id="selectedObjectLabel">선택된 오브젝트 없음</strong><div class="field-row"><label class="grow">가로 크기<input id="objectWidth" type="number" min="10" max="600" value="180"></label><label class="grow">세로 크기<input id="objectHeight" type="number" min="8" max="120" value="22"></label></div><label class="field-label" for="objectColor">오브젝트 색상</label><input id="objectColor" type="color" value="#7867f5"><button type="button" class="button button-remove" id="deleteObject" disabled>선택한 오브젝트 삭제</button></div>
           <button type="button" class="button button-reset-map" id="resetMap">캔버스 비우기</button><p class="field-note">블록은 1×1 칸 크기로 설치돼. 선택 모드에서 끌어서 이동하거나 크기를 바꿀 수 있어.</p>
