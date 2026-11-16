@@ -24,9 +24,9 @@
 @media(max-width:760px){.map-tool{font-size:9px}}
 
 /* Separate creation steps into switchable tabs */
-.step-tabs{display:flex;gap:8px;margin:0 0 14px;padding:6px;background:#ececf5;border-radius:14px}
-.step-tab{flex:1;min-height:48px;border:0;border-radius:10px;background:transparent;color:#77798e;font:700 13px inherit;cursor:pointer}
-.step-tab span{display:inline-grid;place-items:center;width:25px;height:25px;margin-right:7px;border-radius:8px;background:#fff;color:#77798e;font-size:10px}
+.step-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:0 0 14px;padding:6px;background:#ececf5;border-radius:14px}
+.step-tab{min-width:0;min-height:54px;padding:6px 3px;border:0;border-radius:10px;background:transparent;color:#77798e;font:700 12px inherit;line-height:1.25;cursor:pointer}
+.step-tab span{display:grid;place-items:center;width:23px;height:21px;margin:0 auto 3px;border-radius:7px;background:#fff;color:#77798e;font-size:9px}
 .step-tab.active{background:#fff;color:#25253c;box-shadow:0 2px 8px #27234b12}
 .step-tab.active span{background:var(--accent);color:#fff}
 .studio-grid.step-one,.studio-grid.step-two{grid-template-columns:minmax(0,1fr)}
@@ -50,8 +50,8 @@
     box-shadow:0 5px 16px #27234b12;
     backdrop-filter:blur(12px);
   }
-  .step-tab{min-height:52px;font-size:13px}
-  .step-tab span{width:27px;height:27px;margin-right:5px}
+  .step-tab{min-height:58px;font-size:11px;padding:5px 2px}
+  .step-tab span{width:22px;height:20px;margin:0 auto 3px}
   .panel{padding:20px 15px}
   .field-group{margin-bottom:21px}
   input:not([type=color]),select{
@@ -85,7 +85,7 @@
 }
 @media(max-width:390px){
   .workspace{width:calc(100% - 20px)}
-  .step-tab{font-size:12px}
+  .step-tab{font-size:10px}
   .step-tab span{margin-right:3px}
   .panel{padding:17px 12px}
   .template-card{min-height:98px}
