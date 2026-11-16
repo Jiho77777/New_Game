@@ -201,3 +201,41 @@
 .global-game-card{grid-template-columns:minmax(0,1fr) auto}
 .global-game-card .button{min-height:38px;padding:8px 14px}
 @media(max-width:760px){.auth-header-status{font-size:9px;padding:6px 7px}.global-game-card{grid-template-columns:1fr}.global-game-card .button{width:100%}}
+
+
+/* Clear, mobile-friendly tabs for the saved-games area */
+[hidden]{display:none!important}
+.community-tabs{
+  display:flex;
+  gap:8px;
+  width:min(850px,100%);
+  margin:24px auto 0;
+  padding:6px;
+  border:1px solid #e8e7f1;
+  border-radius:14px;
+  background:#f4f3fa;
+}
+.community-tab{
+  flex:1;
+  min-height:44px;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  color:#77798e;
+  font:inherit;
+  font-size:13px;
+  font-weight:800;
+  cursor:pointer;
+  transition:background .18s ease,color .18s ease,box-shadow .18s ease;
+}
+.community-tab.active{
+  background:#fff;
+  color:#5144bd;
+  box-shadow:0 2px 8px rgba(35,28,80,.10);
+}
+.community-tab:focus-visible{outline:3px solid #a79cff;outline-offset:2px}
+.saved-games-panel,.global-games-panel{margin:12px auto 22px}
+@media(max-width:600px){
+  .community-tabs{margin-top:18px;padding:5px;gap:5px}
+  .community-tab{min-height:46px;font-size:12px}
+}
