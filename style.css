@@ -256,3 +256,5 @@
 /* Language selector */
 .language-select{min-height:34px;max-width:94px;padding:6px 7px;border:1px solid #e4e3ef;border-radius:9px;background:#fff;color:#34364b;font-size:11px;font-weight:700}
 @media(max-width:760px){.language-select{min-height:30px;max-width:78px;padding:5px 4px;font-size:9px}.header-actions{gap:4px}}
+
+.platform-level-overlay{margin-top:12px;padding:16px;border:1px solid #dedbff;border-radius:14px;background:#f4f2ff;text-align:center}.platform-level-overlay strong{display:block;font-size:17px;color:#4f43bd}.platform-level-overlay p{font-size:11px;color:#77798e;margin:7px 0}.platform-level-overlay .button{width:100%;margin-top:4px}
