@@ -6,11 +6,11 @@
   <meta name="theme-color" content="#101827">
   <meta name="description" content="코딩 없이 나만의 브라우저 게임을 만드는 쉬운 게임 제작 도구">
   <title>Game Studio - 나만의 게임 만들기</title>
-  <link rel="stylesheet" href="style.css?v=14">
+  <link rel="stylesheet" href="style.css?v=15">
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js" defer></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js" defer></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js" defer></script>
-  <script src="script.js?v=18" defer></script>
+  <script src="script.js?v=19" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -128,7 +128,7 @@
             <div class="game-stats"><div><small>점수</small><b id="previewScore">0</b></div><div><small>남은 시간</small><b id="previewTime">30</b></div></div>
             <div class="play-area" id="playArea"><div class="play-message" id="playMessage">준비됐어?<br>시작 버튼을 눌러 봐!</div><button class="game-target" id="gameTarget" type="button" hidden aria-label="게임 목표">✦</button></div>
             <div class="clicker-shop" id="clickerShop" hidden><div class="shop-heading">업그레이드 상점</div><div class="shop-buttons"><button type="button" id="buyUpgrade">강화 클릭 · 25 코인</button><button type="button" id="buyAuto">자동 수익 · 50 코인</button></div><div id="customShopButtons" class="shop-buttons custom-shop-buttons"></div><p id="clickerStats">클릭 보상: 1 · 자동 수익: 0/초</p></div>
-            <div class="platformer-area" id="platformerArea" hidden><canvas id="platformerCanvas" width="640" height="300" aria-label="2D 플랫포머"></canvas><div class="touch-controls"><button type="button" data-move="left">◀</button><button type="button" data-move="right">▶</button><button type="button" data-move="jump">점프</button></div><p class="platformer-help">PC: ← → / A D 이동, Space 점프 · 모바일: 아래 버튼</p></div>
+            <div class="platformer-area" id="platformerArea" hidden><canvas id="platformerCanvas" width="640" height="300" aria-label="2D 플랫포머"></canvas><div class="touch-controls"><button type="button" data-move="left">◀</button><button type="button" data-move="right">▶</button><button type="button" data-move="jump">점프</button></div><p class="platformer-help">PC: ← → / A D 이동, Space 점프 · 모바일: 아래 버튼</p></div><div class="platform-level-overlay" id="platformLevelOverlay" hidden><strong id="platformLevelMessage">레벨 1 성공!</strong><p id="platformLevelDetail">다음 레벨로 넘어갈 준비가 됐어.</p><button class="button button-primary" id="platformNextButton" type="button">레벨 2 시작</button></div>
             <div class="quiz-area" id="quizArea" hidden><p id="quizPreviewQuestion"></p><input id="quizInput" placeholder="정답을 입력해 봐!" autocomplete="off"><button id="quizSubmit" class="button button-primary" type="button">정답 확인</button></div>
             <button class="button play-button" id="playButton" type="button">게임 시작!</button>
           </div>
